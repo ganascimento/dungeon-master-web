@@ -1,13 +1,135 @@
 body {
   margin: 0;
-  font-family: -apple-system, BlinkMacSystemFont, 'Segoe UI', 'Roboto', 'Oxygen',
-    'Ubuntu', 'Cantarell', 'Fira Sans', 'Droid Sans', 'Helvetica Neue',
+  font-family: -apple-system, BlinkMacSystemFont, "Segoe UI", "Roboto", "Oxygen",
+    "Ubuntu", "Cantarell", "Fira Sans", "Droid Sans", "Helvetica Neue",
     sans-serif;
   -webkit-font-smoothing: antialiased;
   -moz-osx-font-smoothing: grayscale;
+
+  ::-webkit-scrollbar {
+    width: 7px;
+  }
+
+  ::-webkit-scrollbar-track {
+    background: #aaa;
+  }
+
+  ::-webkit-scrollbar-thumb {
+    background: #555;
+  }
 }
 
 code {
-  font-family: source-code-pro, Menlo, Monaco, Consolas, 'Courier New',
+  font-family: source-code-pro, Menlo, Monaco, Consolas, "Courier New",
     monospace;
+}
+
+@font-face {
+  font-family: "DragonHunter";
+  src: local("DragonHunter"),
+    url("./shared/assets/fonts/DragonHunter-9Ynxj.otf") format("opentype");
+  font-weight: normal;
+}
+
+@font-face {
+  font-family: "MightySouly";
+  src: local("MightySouly"),
+    url("./shared/assets/fonts/MightySouly-lxggD.ttf") format("opentype");
+  font-weight: normal;
+}
+
+div {
+  font-family: "MightySouly";
+}
+
+input,
+textarea {
+  font-family: Verdana, Geneva, Tahoma, sans-serif;
+}
+
+@import url(https://fonts.googleapis.com/css?family=Open+Sans:400,700);
+
+h1 {
+  font-weight: 700;
+  margin-bottom: 0.5em;
+}
+
+.box {
+  position: absolute;
+  top: 50%;
+  left: 50%;
+  transform: translate3d(-50%, -50%, 0);
+  background-color: rgba(#000, 0.5);
+  padding: 5px;
+  border: 2px solid #b78846;
+  &:before,
+  &:after {
+    content: "•";
+    position: absolute;
+    width: 14px;
+    height: 14px;
+    font-size: 14px;
+    color: #b78846;
+    border: 2px solid #b78846;
+    line-height: 12px;
+    top: 5px;
+    text-align: center;
+  }
+  &:before {
+    left: 5px;
+  }
+  &:after {
+    right: 5px;
+  }
+  .box-inner {
+    position: relative;
+    border: 2px solid #b78846;
+    padding: 5px;
+    height: calc(100% - 14px);
+    &:before,
+    &:after {
+      content: "•";
+      position: absolute;
+      width: 14px;
+      height: 14px;
+      font-size: 14px;
+      color: #b78846;
+      border: 2px solid #b78846;
+      line-height: 12px;
+      bottom: -2px;
+      text-align: center;
+    }
+    &:before {
+      left: -2px;
+    }
+    &:after {
+      right: -2px;
+    }
+  }
+}
+
+.box-inner-2 {
+  position: relative;
+  border: 2px solid #b78846;
+  padding: 5px;
+  height: 100%;
+  &:before,
+  &:after {
+    content: "•";
+    position: absolute;
+    width: 14px;
+    height: 14px;
+    font-size: 14px;
+    color: #b78846;
+    border: 2px solid #b78846;
+    line-height: 12px;
+    bottom: -2px;
+    text-align: center;
+  }
+  &:before {
+    left: -2px;
+  }
+  &:after {
+    right: -2px;
+  }
 }
