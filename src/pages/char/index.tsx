@@ -1,10 +1,9 @@
 /* eslint-disable react-hooks/exhaustive-deps */
 import { Content } from "../../shared/components/Content";
 import * as S from "./styles";
-import { GiDwarfFace } from "react-icons/gi";
 import { MdOutlineHotelClass } from "react-icons/md";
 import { FaGripfire } from "react-icons/fa6";
-import AbilitiesView from "./views/Abilities";
+import AttributesView from "./views/Attributes";
 import { ReactNode, useContext, useEffect, useState } from "react";
 import RaceView from "./views/Races";
 import ClassView from "./views/Classes";
@@ -12,7 +11,12 @@ import { GameButton } from "../../shared/components/GameButton";
 import { ClassStore } from "../../shared/store/class.store";
 import { RaceStore } from "../../shared/store/race.store";
 import LoadingContext from "../../shared/context/LoaderContext";
-import { CharacterType, ClassType, RaceType } from "../../@types/app.types";
+import {
+  CharacterType,
+  ClassType,
+  RaceType,
+  SkillType,
+} from "../../@types/app.types";
 import { CalcTotalPoints } from "../../shared/ultils/calcTotalPoints";
 import { BsInfoLg } from "react-icons/bs";
 import InfoView from "./views/Info";
@@ -20,7 +24,9 @@ import { AdventureStore } from "../../shared/store/adventure.store";
 import AdventureContext from "../../shared/context/AdventureContext";
 import { useNavigate } from "react-router-dom";
 import { ROUTER_PATHS } from "../../shared/router/router.path";
-import CharacterContext from "../../shared/context/CharacterContext";
+import SkillView from "./views/Skills";
+import { Icon } from "@iconify/react";
+import { SkillStore } from "../../shared/store/skill.store";
 
 type CharCreationType = {
   icon: ReactNode;
@@ -30,19 +36,24 @@ type CharCreationType = {
 
 const charCreationData: CharCreationType[] = [
   {
-    icon: <GiDwarfFace />,
+    icon: <Icon icon="game-icons:dwarf-helmet" />,
     text: "Raça",
-    finished: (value: CharacterType) => !!value.raceType,
+    finished: (value: CharacterType) => !!value.race?.id,
   },
   {
     icon: <MdOutlineHotelClass />,
     text: "Classe",
-    finished: (value: CharacterType) => !!value.classType,
+    finished: (value: CharacterType) => !!value.class?.id,
+  },
+  {
+    icon: <Icon icon="game-icons:skills" />,
+    text: "Atributos",
+    finished: (value: CharacterType) => CalcTotalPoints(value) === 0,
   },
   {
     icon: <FaGripfire />,
     text: "Habilidades",
-    finished: (value: CharacterType) => CalcTotalPoints(value) === 0,
+    finished: (value: CharacterType) => value.skills?.length === 4,
   },
   {
     icon: <BsInfoLg />,
@@ -67,17 +78,18 @@ const initialValue: CharacterType = {
 export default function CharPage() {
   const [, setLoading] = useContext(LoadingContext);
   const [adventure, setAdventure] = useContext(AdventureContext);
-  const [, setCharacterCtx] = useContext(CharacterContext);
 
   const [step, setStep] = useState(0);
   const [races, setRaces] = useState<RaceType[]>();
   const [classes, setClasses] = useState<ClassType[]>();
+  const [skills, setSkills] = useState<SkillType[]>();
   const [character, setCharacter] = useState<CharacterType>(initialValue);
 
   const navigate = useNavigate();
 
   const classStore = new ClassStore();
   const raceStore = new RaceStore();
+  const skillStore = new SkillStore();
   const adventureStore = new AdventureStore();
 
   useEffect(() => {
@@ -87,11 +99,11 @@ export default function CharPage() {
     }
     findClasses();
     findRaces();
+    findSkills();
   }, []);
 
   const findClasses = async () => {
     setLoading(true);
-
     try {
       const result = await classStore.getAll();
       setClasses(result);
@@ -102,7 +114,6 @@ export default function CharPage() {
 
   const findRaces = async () => {
     setLoading(true);
-
     try {
       const result = await raceStore.getAll();
       setRaces(result);
@@ -111,16 +122,13 @@ export default function CharPage() {
     }
   };
 
-  const getIconFromStep = () => {
-    switch (step) {
-      case 0:
-        return <GiDwarfFace />;
-      case 1:
-        return <MdOutlineHotelClass />;
-      case 2:
-        return <FaGripfire />;
-      case 3:
-        return <BsInfoLg />;
+  const findSkills = async () => {
+    setLoading(true);
+    try {
+      const result = await skillStore.getAll();
+      setSkills(result);
+    } finally {
+      setLoading(false);
     }
   };
 
@@ -144,9 +152,17 @@ export default function CharPage() {
         );
       case 2:
         return (
-          <AbilitiesView character={character} setCharacter={setCharacter} />
+          <AttributesView character={character} setCharacter={setCharacter} />
         );
       case 3:
+        return (
+          <SkillView
+            character={character}
+            setCharacter={setCharacter}
+            skills={skills}
+          />
+        );
+      case 4:
         return <InfoView character={character} setCharacter={setCharacter} />;
     }
   };
@@ -158,7 +174,6 @@ export default function CharPage() {
       await adventureStore.saveCharacter(adventure!.id!, character);
       const result = await adventureStore.getById(adventure!.id!);
       setAdventure(result);
-      setCharacterCtx(result?.characteres![0]);
       navigate(ROUTER_PATHS.CharProfile);
     } finally {
       setLoading(false);
@@ -166,7 +181,7 @@ export default function CharPage() {
   };
 
   return (
-    <Content>
+    <Content type={2}>
       <S.Content>
         <S.ContentPrincipal>
           <div className="margin"></div>
@@ -189,7 +204,7 @@ export default function CharPage() {
         </S.ContentPrincipal>
         <S.ContentSecond>
           <div className="content-header">
-            <div className="header-icon">{getIconFromStep()}</div>
+            <div className="header-icon">{charCreationData[step].icon}</div>
           </div>
           {renderSteps()}
         </S.ContentSecond>

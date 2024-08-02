@@ -1,12 +1,13 @@
+/* eslint-disable react-hooks/exhaustive-deps */
 import { useEffect, useState } from "react";
 import { Content } from "../../shared/components/Content";
 import { Logo } from "../../shared/components/Logo";
 import { MenuButton } from "../../shared/components/MenuButton";
-import "./styles.css";
 import CreateAdventureView from "./view/CreateAdventure";
 import { AdventureStore } from "../../shared/store/adventure.store";
 import { AdventureType } from "../../@types/app.types";
 import SelectAdventureView from "./view/SelectAdventure";
+import * as S from "./styles";
 
 export default function AdventurePage() {
   const [isOpenCreateCampain, setIsOpenCreateCampain] = useState(false);
@@ -36,9 +37,9 @@ export default function AdventurePage() {
 
   return (
     <Content>
-      <div className="content-logo">
+      <S.Content>
         <Logo fontSize="25px" />
-      </div>
+      </S.Content>
       <MenuButton
         text="Campanhas"
         disabled={!adventures || adventures.length === 0}

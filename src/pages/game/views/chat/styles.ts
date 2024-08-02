@@ -13,7 +13,10 @@ export const SpaceContent = styled.div`
   overflow-y: auto;
 `;
 
-export const Tile = styled.div`
+type TileProps = {
+  iconColor: string;
+};
+export const Tile = styled.div<TileProps>`
   background: #e2dfd4;
   font-family: Verdana, Geneva, Tahoma, sans-serif;
   font-size: 12px;
@@ -24,7 +27,7 @@ export const Tile = styled.div`
 
   .header {
     display: flex;
-    align-items: start;
+    align-items: center;
     justify-content: start;
     gap: 8px;
     border-bottom: 2px ridge rgba(0, 0, 0, 0.3);
@@ -37,10 +40,16 @@ export const Tile = styled.div`
       display: flex;
       align-items: center;
       justify-content: center;
-      font-size: 22px;
+      font-size: 30px;
       margin-bottom: 5px;
-      color: green;
-      background-color: rgba(0, 0, 0, 0.1);
+      color: ${(props) => props.iconColor};
+      background: #18161990;
+    }
+
+    .name {
+      font-family: Roboto;
+      font-weight: bold;
+      font-size: 16px;
     }
   }
 

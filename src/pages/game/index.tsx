@@ -7,6 +7,7 @@ import { useNavigate } from "react-router-dom";
 import { ROUTER_PATHS } from "../../shared/router/router.path";
 import BoardView from "./views/board";
 import NpcInfo from "./views/board/components/NpcInfo";
+import CharBarView from "./views/charBar";
 
 export default function GamePage() {
   const [adventure] = useContext(AdventureContext);
@@ -23,7 +24,7 @@ export default function GamePage() {
 
   return (
     <S.Content>
-      <div></div>
+      <CharBarView />
       <BoardView
         infoComponent={infoComponent}
         setInfoComponent={setInfoComponent}

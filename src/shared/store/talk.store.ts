@@ -1,4 +1,5 @@
-import { AdventureLogType, TalkRequestType } from "../../@types/app.types";
+import { AdventureType, TalkRequestType } from "../../@types/app.types";
+import { MapAdventure } from "../ultils/mapAdventure";
 import { Api } from "./base";
 
 export class TalkStore {
@@ -15,8 +16,8 @@ export class TalkStore {
   async sendMessag(
     adventureId: string,
     data: TalkRequestType
-  ): Promise<AdventureLogType[] | undefined> {
+  ): Promise<AdventureType | undefined> {
     const result = await Api.post(`/talk/message/${adventureId}`, data);
-    return result.data;
+    return MapAdventure(result.data);
   }
 }

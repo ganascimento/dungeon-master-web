@@ -1,5 +1,4 @@
 import styled from "styled-components";
-import img from "../../shared/assets/images/background.jpg";
 
 export const Content = styled.div`
   display: flex;
@@ -7,9 +6,6 @@ export const Content = styled.div`
   align-items: start;
   width: 100%;
   height: 100%;
-  background-image: url(${img});
-  background-size: contain;
-  background-repeat: no-repeat;
 `;
 
 export const ContentProfile = styled.div`
@@ -56,7 +52,16 @@ export const Name = styled.div`
   align-items: center;
   justify-content: center;
   font-size: 20px;
+`;
+
+export const Race = styled.div`
+  width: 100%;
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  font-size: 15px;
   margin-bottom: 40px;
+  color: rgba(255, 255, 255, 0.5);
 `;
 
 export const ContentImage = styled.div`
@@ -65,4 +70,15 @@ export const ContentImage = styled.div`
   display: flex;
   align-items: end;
   justify-content: end;
+`;
+
+export const ContentSkills = styled.div`
+  display: flex;
+  width: 100%;
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  gap: 9px;
+  margin-top: 30px;
+  margin-bottom: 20px;
 `;

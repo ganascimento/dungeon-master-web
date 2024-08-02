@@ -1,19 +1,15 @@
+import * as S from "./styles";
+
 type Props = {
   fontSize?: string;
 };
 
 export const Logo = (props: Props) => {
   return (
-    <p
-      style={{
-        fontFamily: "DragonHunter",
-        fontSize: props.fontSize ?? "45px",
-        textAlign: "center",
-      }}
-    >
+    <S.Text fontSize={props.fontSize ?? "60px"}>
       Dungeon
       <br />
       Master AI
-    </p>
+    </S.Text>
   );
 };

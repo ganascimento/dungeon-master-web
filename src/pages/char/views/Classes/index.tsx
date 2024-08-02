@@ -1,5 +1,5 @@
+import { Icon } from "@iconify/react";
 import { CharacterType, ClassType } from "../../../../@types/app.types";
-import { ClassList } from "../../../../shared/ultils/classList";
 import * as S from "./styles";
 
 type Props = {
@@ -10,7 +10,7 @@ type Props = {
 
 export default function ClassView(props: Props) {
   const handleSelect = (value: ClassType) => {
-    props.setCharacter({ ...props.character, classType: value.type });
+    props.setCharacter({ ...props.character, class: value });
   };
 
   return (
@@ -20,10 +20,12 @@ export default function ClassView(props: Props) {
         {props.classes?.map((c, index) => (
           <S.Item
             onClick={() => handleSelect(c)}
-            selected={c.type === props.character.classType}
+            selected={c.type === props.character.class?.type}
             key={index}
           >
-            <i>{ClassList.find((x) => x.class === c.type)?.icon}</i>
+            <i>
+              <Icon icon={c.icon} />
+            </i>
             <span>{c.name}</span>
           </S.Item>
         ))}

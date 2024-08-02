@@ -1,15 +1,3 @@
-export enum RaceEnum {
-  Human = 1,
-  Elf = 2,
-}
-
-export enum ClassEnum {
-  Paladin = 1,
-  Warrior = 2,
-  Mage = 3,
-  Warlock = 4,
-}
-
 export enum CharacterTypeEnum {
   Principal = 1,
   Ally = 2,
@@ -20,4 +8,21 @@ export enum CharacterTypeEnum {
 export enum PromptEnum {
   Talk = "#TALK",
   TalkMaster = "#TALK_MASTER",
+}
+
+export enum AdventureLogEnum {
+  Environment = 1,
+  Npc = 2,
+  Character = 3,
+  Damage = 4,
+}
+
+export enum LocationEnum {
+  Safe = 1,
+  Explore = 2,
+}
+
+export enum SkillEnum {
+  Melee = 1,
+  Range = 2,
 }

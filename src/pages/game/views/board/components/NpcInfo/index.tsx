@@ -10,8 +10,6 @@ type Props = {
 export default function NpcInfo(props: Props) {
   const [chat, setChat] = useContext(ChatContext);
 
-  console.log("aa");
-
   const onTalkSelect = () => {
     setChat({
       ident: props.infoComponent?.ident,
@@ -32,6 +30,9 @@ export default function NpcInfo(props: Props) {
       </div>
       <div className="item">
         <span>Função:</span> {props.infoComponent.function}
+      </div>
+      <div className="item">
+        <span>Raça:</span> {props.infoComponent.race}
       </div>
       <div className="item">
         <span>Estado:</span> {props.infoComponent.state}

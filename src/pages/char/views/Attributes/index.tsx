@@ -1,13 +1,13 @@
+/* eslint-disable react-hooks/exhaustive-deps */
 import { FaPlus } from "react-icons/fa";
 import { FaMinus } from "react-icons/fa";
 import * as S from "./styles";
 import { ReactNode, useEffect, useState } from "react";
 import { CharacterType } from "../../../../@types/app.types";
 import { CalcTotalPoints } from "../../../../shared/ultils/calcTotalPoints";
-import {
-  AbilitiesList,
-  CalcAbilityBonus,
-} from "../../../../shared/ultils/abilitiesList";
+import { AbilitiesList } from "../../../../shared/ultils/abilitiesList";
+import { CalcAttributeBonus } from "../../../../shared/ultils/calcAttributeBonus";
+import { RenderBonusString } from "../../../../shared/ultils/damageUltils";
 
 type AbilityType = {
   field?: string;
@@ -22,15 +22,13 @@ type Props = {
   setCharacter: (value: CharacterType) => void;
 };
 
-export default function AbilitiesView(props: Props) {
+export default function AttributesView(props: Props) {
   const [abilities, setAbilities] = useState<AbilityType[]>(AbilitiesList);
   const [totalPoints, setTotalPoints] = useState(25);
 
   useEffect(() => {
     setTotalPoints(CalcTotalPoints(props.character));
   }, []);
-
-  const renderBonus = (bonus: number) => `${bonus < 0 ? "" : "+"}${bonus}`;
 
   const handleAddPoints = (text: string) => {
     if (totalPoints === 0) return;
@@ -40,7 +38,7 @@ export default function AbilitiesView(props: Props) {
       [...abilities].map((ability) => {
         if (ability.text === text && ability.points) {
           ability.points += 1;
-          ability.bonus = CalcAbilityBonus(ability.points);
+          ability.bonus = CalcAttributeBonus(ability.points);
           props.setCharacter({
             ...props.character,
             [ability.field!]: ability.points,
@@ -59,7 +57,7 @@ export default function AbilitiesView(props: Props) {
       [...abilities].map((ability) => {
         if (ability.text === text && ability.points) {
           ability.points -= 1;
-          ability.bonus = CalcAbilityBonus(ability.points);
+          ability.bonus = CalcAttributeBonus(ability.points);
           props.setCharacter({
             ...props.character,
             [ability.field!]: ability.points,
@@ -102,7 +100,7 @@ export default function AbilitiesView(props: Props) {
             >
               <FaPlus />
             </div>
-            <div className="bonus">{renderBonus(ability.bonus ?? 0)}</div>
+            <div className="bonus">{RenderBonusString(ability.bonus ?? 0)}</div>
           </div>
         </S.Ability>
       ))}

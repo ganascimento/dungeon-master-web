@@ -1,5 +1,5 @@
+import { Icon } from "@iconify/react";
 import { CharacterType, RaceType } from "../../../../@types/app.types";
-import { RaceList } from "../../../../shared/ultils/raceList";
 import * as S from "./styles";
 
 type Props = {
@@ -10,7 +10,7 @@ type Props = {
 
 export default function RaceView(props: Props) {
   const handleSelect = (race: RaceType) => {
-    props.setCharacter({ ...props.character, raceType: race.type });
+    props.setCharacter({ ...props.character, race });
   };
 
   return (
@@ -20,10 +20,12 @@ export default function RaceView(props: Props) {
         {props.races?.map((race, index) => (
           <S.Item
             onClick={() => handleSelect(race)}
-            selected={race.type === props.character.raceType}
+            selected={race.type === props.character.race?.type}
             key={index}
           >
-            <i>{RaceList.find((x) => x.race === race.type)?.icon}</i>
+            <i>
+              <Icon icon={race.icon} />
+            </i>
             <span>{race.name}</span>
           </S.Item>
         ))}

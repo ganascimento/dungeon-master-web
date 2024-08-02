@@ -1,4 +1,9 @@
-import { CharacterTypeEnum } from "./constants.types";
+import {
+  AdventureLogEnum,
+  CharacterTypeEnum,
+  LocationEnum,
+  SkillEnum,
+} from "./constants.types";
 
 export type AdventureType = {
   id?: string;
@@ -6,9 +11,9 @@ export type AdventureType = {
   description?: string;
   plot?: string;
   started?: boolean;
-  characteres?: CharacterType[];
+  character?: CharacterType;
+  allies?: CharacterType[];
   adventureLogs?: AdventureLogType[];
-  npcs?: NpcType[];
   location?: LocationType;
 };
 
@@ -17,6 +22,7 @@ export type RaceType = {
   name: string;
   description: string;
   type: number;
+  icon: string;
 };
 
 export type ClassType = {
@@ -24,10 +30,11 @@ export type ClassType = {
   name: string;
   description: string;
   type: number;
+  icon: string;
 };
 
 export type CharacterType = {
-  id?: string;
+  ident?: string;
   name?: string;
   description?: string;
   strength?: number;
@@ -36,33 +43,39 @@ export type CharacterType = {
   intelligence?: number;
   wisdom?: number;
   charisma?: number;
-  raceType?: number;
-  classType?: number;
+  race?: RaceType;
+  class?: ClassType;
   token?: TokenType;
   type?: CharacterTypeEnum;
+  skills?: SkillType[];
+  totalLife?: number;
+  currentLife?: number;
 };
 
 export type TokenType = {
   ident: string;
   color: string;
-  matrixX: number;
-  matrixY: number;
+  matrix: PositionType;
+  moveIntend: PositionType;
   moveState: number;
-  moveIntendX?: number;
-  moveIntendY?: number;
   isMyChar: boolean;
   type: CharacterTypeEnum;
+  allowGo?: boolean;
 };
 
 export type BoardConfigType = {
   width: number;
   height: number;
   size: number;
+  context: any;
   canvasRef?: any;
+  images: BoarImageType[];
 };
 
 export type AdventureLogType = {
   text: string;
+  name: string;
+  type: AdventureLogEnum;
 };
 
 export type NpcType = {
@@ -73,7 +86,20 @@ export type NpcType = {
 };
 
 export type LocationType = {
+  ident: string;
   name: string;
+  isCurrent: boolean;
+  type: LocationEnum;
+  map: MapType;
+  npcs?: NpcType[];
+  traps?: TrapType[];
+  enemyTraps?: PositionType[];
+  allys?: PositionType[];
+  endPosition?: PositionType;
+};
+
+export type MapType = {
+  fileName: string;
 };
 
 export type ChatType = {
@@ -86,4 +112,36 @@ export type TalkRequestType = {
   text: string;
   type: string;
   target: string;
+};
+
+export type PositionType = {
+  x: number;
+  y: number;
+};
+
+export type SkillType = {
+  id: string;
+  name: string;
+  damage: string;
+  enable?: boolean;
+  type: SkillEnum;
+  shortRest: boolean;
+  icon: string;
+};
+
+export type TrapType = {
+  activeted: boolean;
+  ident: string;
+  position: PositionType;
+};
+
+export type BoarImageType = {
+  img: any;
+  name: string;
+};
+
+export type BoardRequestType = {
+  adventureId: string;
+  characterIdent: string;
+  position: PositionType;
 };

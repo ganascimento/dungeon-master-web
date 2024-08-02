@@ -2,12 +2,15 @@ import styled from "styled-components";
 
 export const Content = styled.div`
   padding: 0 25px 25px 25px;
+  display: flex;
+  gap: 20px;
 `;
 
 type ItemPros = {
   selected: boolean;
 };
 export const Item = styled.div<ItemPros>`
+  width: 70px;
   display: flex;
   flex-direction: column;
   align-items: center;
