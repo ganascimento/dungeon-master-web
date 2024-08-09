@@ -2,6 +2,8 @@ import {
   AdventureLogEnum,
   CharacterTypeEnum,
   LocationEnum,
+  MoveEnum,
+  PromptEnum,
   SkillEnum,
 } from "./constants.types";
 
@@ -15,6 +17,8 @@ export type AdventureType = {
   allies?: CharacterType[];
   adventureLogs?: AdventureLogType[];
   location?: LocationType;
+  mainGoal?: string;
+  currentGoal?: string;
 };
 
 export type RaceType = {
@@ -50,6 +54,8 @@ export type CharacterType = {
   skills?: SkillType[];
   totalLife?: number;
   currentLife?: number;
+  totalStamina?: number;
+  currentStamina?: number;
 };
 
 export type TokenType = {
@@ -61,6 +67,7 @@ export type TokenType = {
   isMyChar: boolean;
   type: CharacterTypeEnum;
   allowGo?: boolean;
+  death?: boolean;
 };
 
 export type BoardConfigType = {
@@ -76,6 +83,8 @@ export type AdventureLogType = {
   text: string;
   name: string;
   type: AdventureLogEnum;
+  icon: string;
+  color: string;
 };
 
 export type NpcType = {
@@ -96,6 +105,7 @@ export type LocationType = {
   enemyTraps?: PositionType[];
   allys?: PositionType[];
   endPosition?: PositionType;
+  battle?: BattleType;
 };
 
 export type MapType = {
@@ -110,7 +120,7 @@ export type ChatType = {
 
 export type TalkRequestType = {
   text: string;
-  type: string;
+  type: PromptEnum;
   target: string;
 };
 
@@ -122,11 +132,19 @@ export type PositionType = {
 export type SkillType = {
   id: string;
   name: string;
-  damage: string;
-  enable?: boolean;
+  roll: string;
   type: SkillEnum;
-  shortRest: boolean;
   icon: string;
+  turns: number;
+  range: number;
+  target: number;
+  area: number;
+  staminaCost: number;
+  description?: string;
+  currentTurn: number;
+  typeString: string;
+  selected?: boolean;
+  duration?: boolean;
 };
 
 export type TrapType = {
@@ -142,6 +160,23 @@ export type BoarImageType = {
 
 export type BoardRequestType = {
   adventureId: string;
-  characterIdent: string;
   position: PositionType;
+};
+
+export type BattleType = {
+  running: boolean;
+  enemies: CharacterType[];
+  turnOrder: TurnOrderType[];
+};
+
+export type TurnOrderType = {
+  active: boolean;
+  ident: string;
+};
+
+export type CharacterMoveRequestType = {
+  adventureId: string;
+  positions: PositionType[];
+  type: MoveEnum;
+  skillId?: string;
 };

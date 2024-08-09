@@ -8,13 +8,13 @@ import { AbilityList } from "../../shared/components/AbilityList";
 import { GameButton } from "../../shared/components/GameButton";
 import AdventureContext from "../../shared/context/AdventureContext";
 import { AdventureStore } from "../../shared/store/adventure.store";
-import LoadingContext from "../../shared/context/LoaderContext";
+import LoaderContext from "../../shared/context/LoaderContext";
 import { Icon } from "@iconify/react";
 import { SkillDetails } from "../../shared/components/SkillDetails";
 
 export default function CharProfilePage() {
   const [adventure, setAdventure] = useContext(AdventureContext);
-  const [, setLoading] = useContext(LoadingContext);
+  const [, setLoading] = useContext(LoaderContext);
 
   const navigate = useNavigate();
   const adventureStore = new AdventureStore();

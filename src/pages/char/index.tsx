@@ -10,7 +10,7 @@ import ClassView from "./views/Classes";
 import { GameButton } from "../../shared/components/GameButton";
 import { ClassStore } from "../../shared/store/class.store";
 import { RaceStore } from "../../shared/store/race.store";
-import LoadingContext from "../../shared/context/LoaderContext";
+import LoaderContext from "../../shared/context/LoaderContext";
 import {
   CharacterType,
   ClassType,
@@ -53,7 +53,7 @@ const charCreationData: CharCreationType[] = [
   {
     icon: <FaGripfire />,
     text: "Habilidades",
-    finished: (value: CharacterType) => value.skills?.length === 4,
+    finished: (value: CharacterType) => value.skills?.length === 6,
   },
   {
     icon: <BsInfoLg />,
@@ -76,7 +76,7 @@ const initialValue: CharacterType = {
 };
 
 export default function CharPage() {
-  const [, setLoading] = useContext(LoadingContext);
+  const [, setLoading] = useContext(LoaderContext);
   const [adventure, setAdventure] = useContext(AdventureContext);
 
   const [step, setStep] = useState(0);

@@ -1,7 +1,7 @@
 import { createContext } from "react";
 
-const LoaderContext = createContext<
+const LoadingContext = createContext<
   [boolean, React.Dispatch<React.SetStateAction<boolean>>]
 >([] as any);
 
-export default LoaderContext;
+export default LoadingContext;

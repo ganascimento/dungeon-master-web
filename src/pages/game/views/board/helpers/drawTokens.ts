@@ -1,8 +1,4 @@
-import {
-  AdventureType,
-  BoardConfigType,
-  TokenType,
-} from "../../../../../@types/app.types";
+import { BoardConfigType, TokenType } from "../../../../../@types/app.types";
 import { CharacterTypeEnum } from "../../../../../@types/constants.types";
 import { GetPositionFromMatrix } from "./getSizes";
 
@@ -13,7 +9,6 @@ const enemyIdentColor = "red";
 
 export const DrawTokens = (
   boardConfig: BoardConfigType,
-  adventure: AdventureType,
   tokens: TokenType[]
 ) => {
   tokens.forEach((token) => {
@@ -35,6 +30,9 @@ const drawToken = (
   token: TokenType,
   boardConfig: BoardConfigType
 ) => {
+  const skull = boardConfig.images.find((x) => x.name === "skull");
+  if (!skull) return;
+
   const [positionX, positionY] = GetPositionFromMatrix(
     boardConfig,
     token.matrix.x,
@@ -52,6 +50,15 @@ const drawToken = (
     context.lineWidth = 2;
     context.strokeStyle = "#000";
     context.stroke();
+  }
+  if (token.death) {
+    boardConfig.context.drawImage(
+      skull.img,
+      positionX - 12,
+      positionY - 13,
+      25,
+      25
+    );
   }
 
   context.beginPath();

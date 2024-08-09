@@ -7,7 +7,7 @@ import { MenuButton } from "../../../../shared/components/MenuButton";
 import Wrapper from "../../../../shared/components/Wrapper";
 import { object, string } from "yup";
 import { TalkStore } from "../../../../shared/store/talk.store";
-import LoadingContext from "../../../../shared/context/LoaderContext";
+import LoaderContext from "../../../../shared/context/LoaderContext";
 import { AdventureStore } from "../../../../shared/store/adventure.store";
 
 type Props = {
@@ -18,7 +18,7 @@ type Props = {
 
 export default function CreateAdventureView(props: Props) {
   const [data, setData] = useState<AdventureType>();
-  const [, setLoading] = useContext(LoadingContext);
+  const [, setLoading] = useContext(LoaderContext);
 
   const talkStore = new TalkStore();
   const adventureStore = new AdventureStore();

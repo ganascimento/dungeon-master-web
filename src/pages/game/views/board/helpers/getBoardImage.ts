@@ -34,7 +34,7 @@ export const GetImagePath = (name?: string) => {
       return gates;
     case "jungle-temple.jpg":
       return jungleTemple;
-    case "montain.jpg":
+    case "mountain.jpg":
       return mountain;
     case "river.jpg":
       return river;

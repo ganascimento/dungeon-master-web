@@ -21,7 +21,7 @@ export const Content = styled.div<ContentProps>`
     #fff 50%
   )`
       : ""};
-  animation: animate 2s linear infinite;
+  animation: animate 1.5s linear infinite;
 
   @property --a {
     syntax: "<angle>";
@@ -66,8 +66,7 @@ export const Item = styled.div<ItemProps>`
     width: 250px;
     background: linear-gradient(to bottom, #181619, #30231e);
     border-radius: 10% / 8%;
-    border-top: 3px ridge #b78846;
-    border-bottom: 2px ridge #b78846;
+    border: 2px ridge #b78846;
     padding: 8px 10px;
     position: absolute;
     z-index: 1;
@@ -80,6 +79,7 @@ export const Item = styled.div<ItemProps>`
     justify-content: start;
     flex-direction: column;
     color: #fff;
+    box-shadow: 6px 6px 4px rgba(0, 0, 0, 0.4);
 
     div {
       font-family: Roboto;
@@ -93,6 +93,12 @@ export const Item = styled.div<ItemProps>`
       color: rgba(255, 255, 255, 0.6);
       margin-bottom: 12px;
     }
+    .desc {
+      font-size: 12px;
+      color: rgba(255, 255, 255, 0.6);
+      margin-bottom: 12px;
+      color: #ddd;
+    }
     .damage {
       font-size: 21px;
       margin-bottom: 12px;
@@ -101,6 +107,7 @@ export const Item = styled.div<ItemProps>`
       display: flex;
       align-items: center;
       gap: 10px;
+      margin-bottom: 15px;
 
       svg {
         font-size: 35px;
@@ -114,6 +121,37 @@ export const Item = styled.div<ItemProps>`
   &:hover {
     .popup {
       visibility: visible;
+    }
+  }
+`;
+
+export const TurnContent = styled.div`
+  position: absolute;
+  background-color: rgba(0, 0, 0, 0.6);
+  border-radius: 3px;
+  width: 44px;
+  height: 44px;
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  cursor: not-allowed;
+`;
+
+export const PropsContent = styled.div`
+  display: flex;
+  flex-wrap: wrap;
+  gap: 13px;
+
+  .props {
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    font-size: 16px;
+    gap: 3px;
+
+    svg {
+      font-size: 25px;
+      color: #aaa;
     }
   }
 `;

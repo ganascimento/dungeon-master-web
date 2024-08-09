@@ -1,4 +1,8 @@
-import { AdventureType, BoardRequestType } from "../../@types/app.types";
+import {
+  AdventureType,
+  BoardRequestType,
+  CharacterMoveRequestType,
+} from "../../@types/app.types";
 import { Api } from "./base";
 
 export class BoardStore {
@@ -6,6 +10,20 @@ export class BoardStore {
     data: BoardRequestType
   ): Promise<AdventureType | undefined> {
     const result = await Api.post(`/board`, data);
+    return result.data;
+  }
+
+  async characterMove(
+    data: CharacterMoveRequestType
+  ): Promise<AdventureType | undefined> {
+    const result = await Api.post(`/board/move`, data);
+    return result.data;
+  }
+
+  async characterEndTurn(
+    adventureId: string
+  ): Promise<AdventureType | undefined> {
+    const result = await Api.post(`/board/endTurn?adventureId=${adventureId}`);
     return result.data;
   }
 }

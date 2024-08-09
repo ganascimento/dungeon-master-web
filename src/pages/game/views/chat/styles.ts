@@ -11,6 +11,13 @@ export const SpaceContent = styled.div`
   padding: 8px;
   height: calc(100% - 150px);
   overflow-y: auto;
+
+  .content-load {
+    width: 100%;
+    display: flex;
+    align-items: center;
+    justify-content: center;
+  }
 `;
 
 type TileProps = {

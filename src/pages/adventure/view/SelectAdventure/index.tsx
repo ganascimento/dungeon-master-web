@@ -24,7 +24,10 @@ export default function SelectAdventureView(props: Props) {
     const result = await adventureStore.getById(adventure!.id!);
     setAdventure(result);
 
-    if (!result?.character) navigate(ROUTER_PATHS.Char);
+    console.log(result);
+
+    if (!result?.character || !result.character.ident)
+      navigate(ROUTER_PATHS.Char);
     else navigate(ROUTER_PATHS.CharProfile);
   };
 

@@ -6,12 +6,12 @@ import AdventureContext from "../../shared/context/AdventureContext";
 import { useNavigate } from "react-router-dom";
 import { ROUTER_PATHS } from "../../shared/router/router.path";
 import BoardView from "./views/board";
-import NpcInfo from "./views/board/components/NpcInfo";
+import PlayerInfo from "./views/board/components/PlayerInfo";
 import CharBarView from "./views/charBar";
 
 export default function GamePage() {
   const [adventure] = useContext(AdventureContext);
-  const [infoComponent, setInfoComponent] = useState<any>({});
+  const [playerInfo, setPlayerInfo] = useState<any>({});
 
   const navigate = useNavigate();
 
@@ -25,12 +25,9 @@ export default function GamePage() {
   return (
     <S.Content>
       <CharBarView />
-      <BoardView
-        infoComponent={infoComponent}
-        setInfoComponent={setInfoComponent}
-      />
+      <BoardView playerInfo={playerInfo} setPlayerInfo={setPlayerInfo} />
       <ChatView />
-      <NpcInfo infoComponent={infoComponent} />
+      <PlayerInfo playerInfo={playerInfo} />
     </S.Content>
   );
 }

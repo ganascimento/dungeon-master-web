@@ -2,6 +2,7 @@ import { BoarImageType } from "../../../../../@types/app.types";
 import trapSvg from "../../../../../shared/assets/icons/traps.svg";
 import trapActSvg from "../../../../../shared/assets/icons/trap-activated.svg";
 import thiefSvg from "../../../../../shared/assets/icons/thief.svg";
+import skullSvg from "../../../../../shared/assets/icons/skull.svg";
 
 export const LoadImages = (): BoarImageType[] => {
   const trapImg = new Image();
@@ -10,6 +11,8 @@ export const LoadImages = (): BoarImageType[] => {
   trapActImg.src = trapActSvg;
   const thiefImg = new Image();
   thiefImg.src = thiefSvg;
+  const skullImg = new Image();
+  skullImg.src = skullSvg;
 
   return [
     {
@@ -23,6 +26,10 @@ export const LoadImages = (): BoarImageType[] => {
     {
       img: trapActImg,
       name: "trapActivated",
+    },
+    {
+      img: skullImg,
+      name: "skull",
     },
   ];
 };

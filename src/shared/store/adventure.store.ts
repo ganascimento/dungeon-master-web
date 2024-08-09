@@ -1,5 +1,4 @@
 import { AdventureType, CharacterType } from "../../@types/app.types";
-import { MapAdventure } from "../ultils/mapAdventure";
 import { Api } from "./base";
 
 export class AdventureStore {
@@ -11,7 +10,7 @@ export class AdventureStore {
 
   async getById(id: string): Promise<AdventureType | undefined> {
     const result = await Api.get(`/adventure/${id}`);
-    return MapAdventure(result.data);
+    return result.data;
   }
 
   async create(data: AdventureType): Promise<void> {

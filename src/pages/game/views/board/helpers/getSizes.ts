@@ -34,6 +34,15 @@ export const GetMatrixFromPosition = (
   return [matrixX, matrixY];
 };
 
+export const GetRectPosition = (
+  event: MouseEvent,
+  boardConfig: BoardConfigType,
+  isMiddle = true
+) => {
+  const [matrixX, matrixY] = GetMatrixFromPosition(event, boardConfig);
+  return GetPositionFromMatrix(boardConfig, matrixX, matrixY, isMiddle);
+};
+
 export const GetBoardSize = () => {
   const maxWidth = 1200;
   const maxHeight = 780;

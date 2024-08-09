@@ -1,7 +1,6 @@
 import { useContext, useEffect, useState } from "react";
 import * as S from "./styles";
 import AdventureContext from "../../../../shared/context/AdventureContext";
-import { FaEnvira } from "react-icons/fa6";
 import { Icon } from "@iconify/react";
 import ChatContext from "../../../../shared/context/ChatContext";
 import { TalkStore } from "../../../../shared/store/talk.store";
@@ -11,9 +10,11 @@ import {
 } from "../../../../@types/constants.types";
 import { CircleLoader } from "react-spinners";
 import { AdventureLogType } from "../../../../@types/app.types";
+import LoadingContext from "../../../../shared/context/LoadingContext";
 
 export default function ChatView() {
   const [adventure, setAdventure] = useContext(AdventureContext);
+  const [loadingCtx] = useContext(LoadingContext);
   const [chat, setChat] = useContext(ChatContext);
   const [message, setMessage] = useState("");
   const [loading, setLoading] = useState(false);
@@ -22,7 +23,7 @@ export default function ChatView() {
 
   useEffect(() => {
     setScrollToBottom();
-  }, []);
+  }, [adventure]);
 
   const onRemoveSelection = () => {
     setChat(undefined);
@@ -56,27 +57,14 @@ export default function ChatView() {
   const mapIcon = (log: AdventureLogType) => {
     if (log.type === AdventureLogEnum.Character)
       return <Icon icon={adventure?.character?.class?.icon ?? ""} />;
-    if (log.type === AdventureLogEnum.Npc)
-      return <Icon icon="ic:outline-person" />;
-    if (log.type === AdventureLogEnum.Damage)
-      return <Icon icon="ion:skull-sharp" />;
-
-    return <FaEnvira />;
+    return <Icon icon={log.icon} />;
   };
-
-  function getIconColor(log: AdventureLogType): string {
-    if (log.type === AdventureLogEnum.Character) return "orange";
-    if (log.type === AdventureLogEnum.Npc) return "#000";
-    if (log.type === AdventureLogEnum.Damage) return "#dc3545";
-
-    return "#28a745";
-  }
 
   return (
     <S.Content>
       <S.SpaceContent id="chat-content">
         {adventure?.adventureLogs?.map((adventureLog, index) => (
-          <S.Tile key={index} iconColor={getIconColor(adventureLog)}>
+          <S.Tile key={index} iconColor={adventureLog.color}>
             <div className="header">
               <div className="ident">{mapIcon(adventureLog)}</div>
               <div className="name">{adventureLog.name}</div>
@@ -84,11 +72,18 @@ export default function ChatView() {
             <div
               className="body"
               dangerouslySetInnerHTML={{
-                __html: adventureLog.text,
+                __html: adventureLog.text.replace("\n", "<br />"),
               }}
             ></div>
           </S.Tile>
         ))}
+        {loadingCtx ? (
+          <div className="content-load">
+            <CircleLoader color="#b78846" />
+          </div>
+        ) : (
+          <></>
+        )}
       </S.SpaceContent>
 
       <S.ContentChat>

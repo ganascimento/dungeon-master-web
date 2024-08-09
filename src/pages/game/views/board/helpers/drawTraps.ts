@@ -17,32 +17,34 @@ export const DrawTraps = (
 
   if (!location || !imageTrap || !imageThief || !imageTrapActivated) return;
 
-  location.traps?.forEach((trap) => {
-    const [positionX, positionY] = GetPositionFromMatrix(
-      boardConfig,
-      trap.position.x,
-      trap.position.y,
-      false
-    );
+  location.traps
+    //?.filter((trap) => trap.activeted)
+    ?.forEach((trap) => {
+      const [positionX, positionY] = GetPositionFromMatrix(
+        boardConfig,
+        trap.position.x,
+        trap.position.y,
+        false
+      );
 
-    boardConfig.context.beginPath();
-    if (trap.activeted)
-      boardConfig.context.drawImage(
-        imageTrapActivated.img,
-        positionX,
-        positionY,
-        35,
-        35
-      );
-    else
-      boardConfig.context.drawImage(
-        imageTrap.img,
-        positionX,
-        positionY,
-        35,
-        35
-      );
-  });
+      boardConfig.context.beginPath();
+      if (trap.activeted)
+        boardConfig.context.drawImage(
+          imageTrapActivated.img,
+          positionX,
+          positionY,
+          35,
+          35
+        );
+      else
+        boardConfig.context.drawImage(
+          imageTrap.img,
+          positionX,
+          positionY,
+          35,
+          35
+        );
+    });
 
   location.enemyTraps?.forEach((enemyTrap) => {
     const [positionX, positionY] = GetPositionFromMatrix(
