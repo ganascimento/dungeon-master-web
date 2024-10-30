@@ -15,6 +15,7 @@ import { DrawGoal } from "./helpers/drawGoal";
 import LoadingContext from "../../../../shared/context/LoadingContext";
 import ChatContext from "../../../../shared/context/ChatContext";
 import { DrawMouseMove } from "./helpers/drawMouseMove";
+import { DrawTravelPoints } from "./helpers/drawTravelPoints";
 
 const initialValue: BoardConfigType = {
   height: 780,
@@ -77,6 +78,7 @@ export default function BoardView(props: Props) {
       DrawTraps(boardConfig, adventure!);
       DrawGoal(boardConfig, adventure!);
       DrawMouseMove(lastMouseMoveEvent, boardConfig, adventure!);
+      DrawTravelPoints(boardConfig, adventure!);
 
       setFrameRef(window.requestAnimationFrame(render));
     };

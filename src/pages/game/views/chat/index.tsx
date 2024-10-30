@@ -72,7 +72,9 @@ export default function ChatView() {
             <div
               className="body"
               dangerouslySetInnerHTML={{
-                __html: adventureLog.text.replace("\n", "<br />"),
+                __html: adventureLog.text
+                  .replace("\n", "<br />")
+                  .replace("\n", "<br />"),
               }}
             ></div>
           </S.Tile>

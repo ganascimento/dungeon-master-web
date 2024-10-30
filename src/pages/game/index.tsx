@@ -6,7 +6,7 @@ import AdventureContext from "../../shared/context/AdventureContext";
 import { useNavigate } from "react-router-dom";
 import { ROUTER_PATHS } from "../../shared/router/router.path";
 import BoardView from "./views/board";
-import PlayerInfo from "./views/board/components/PlayerInfo";
+import BoardInfo from "./views/board/components/BoardInfo";
 import CharBarView from "./views/charBar";
 
 export default function GamePage() {
@@ -27,7 +27,7 @@ export default function GamePage() {
       <CharBarView />
       <BoardView playerInfo={playerInfo} setPlayerInfo={setPlayerInfo} />
       <ChatView />
-      <PlayerInfo playerInfo={playerInfo} />
+      <BoardInfo playerInfo={playerInfo} />
     </S.Content>
   );
 }

@@ -6,6 +6,7 @@ import {
   TokenType,
 } from "../../../../../@types/app.types";
 import {
+  Boardenum,
   CharacterTypeEnum,
   LocationEnum,
   MoveEnum,
@@ -73,7 +74,7 @@ const NoBattleClick = ({
   setLoadingCtx,
 }: ClickActionType) => {
   if (elementInPosition?.token?.type === CharacterTypeEnum.Principal) {
-    setPlayerInfo({ ...playerInfo, show: false });
+    setPlayerInfo({ ...playerInfo, show: false, boardType: undefined });
     return;
   }
 
@@ -127,6 +128,7 @@ const NoBattleClick = ({
     positionX: event.pageX - 280,
     positionY: event.pageY - 115,
     ...elementInPosition,
+    boardType: elementInPosition.boardType,
   });
 };
 
@@ -196,11 +198,29 @@ const GetElementInPosition = (
 ): any => {
   let element: any;
 
+  adventure.locations
+    ?.filter((location) => !!location.mapPosition)
+    ?.forEach((location) => {
+      if (
+        location.mapPosition.x === matrixX &&
+        location.mapPosition.y === matrixY
+      )
+        element = {
+          ...location,
+          boardType: Boardenum.Travel,
+        };
+    });
+
+  if (!!element) return element;
+
   if (
     adventure!.character!.token?.matrix.x === matrixX &&
     adventure!.character!.token?.matrix.y === matrixY
   )
-    return adventure!.character;
+    return {
+      ...adventure!.character,
+      boardType: Boardenum.Person,
+    };
 
   adventure.location?.npcs?.forEach((npc) => {
     if (npc.token?.matrix.x === matrixX && npc.token?.matrix.y === matrixY)

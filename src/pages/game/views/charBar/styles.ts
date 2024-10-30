@@ -131,61 +131,28 @@ export const Itens = styled.div`
     color: #ccc;
     cursor: pointer;
     position: relative;
+  }
+`;
 
-    .popup {
-      visibility: hidden;
-      width: 250px;
-      background: linear-gradient(to bottom, #181619, #30231e);
-      border-radius: 10% / 8%;
-      border: 2px ridge #b78846;
-      padding: 8px 10px;
-      position: absolute;
-      z-index: 1;
-      bottom: 125%;
-      left: 100%;
-      margin-left: -40px;
-      display: flex;
-      align-items: start;
-      justify-content: start;
-      flex-direction: column;
-      color: #fff;
-      box-shadow: 6px 6px 4px rgba(0, 0, 0, 0.4);
+export const MissionContent = styled.div`
+  text-align: left;
+`;
 
-      div {
-        font-family: Roboto;
-        color: white;
-        margin-bottom: 0;
-      }
-      .main {
-        font-size: 15px;
-        font-weight: 400;
-        color: #b78846;
-        margin-bottom: 3px;
-        font-weight: 600;
-      }
-      .second {
-        font-size: 14px;
-        margin-top: 12px;
-        margin-bottom: 3px;
-        font-weight: 600;
-      }
-      .text {
-        width: 100%;
-        font-size: 12px;
-        padding: 0;
-        margin: 0;
-        display: flex;
-        justify-content: start;
-        align-items: start;
-        text-align: start;
-        color: #ccc;
-      }
-    }
-
-    &:hover {
-      .popup {
-        visibility: visible;
-      }
-    }
+type MissionItemType = {
+  marginLeft: number;
+  isMain: boolean;
+};
+export const MissionItem = styled.div<MissionItemType>`
+  font-family: Roboto;
+  font-size: 16px;
+  margin: 0;
+  padding: 0;
+  margin-left: ${(props) => props.marginLeft * 20}px;
+  line-height: 25px;
+  display: flex;
+  align-items: center;
+  color: ${(props) => (props.isMain ? "#b78846" : "#fff")};
+  svg {
+    margin-right: 7px;
   }
 `;

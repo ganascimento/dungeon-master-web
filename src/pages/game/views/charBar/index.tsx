@@ -1,14 +1,18 @@
-import { useContext } from "react";
+import { useContext, useState } from "react";
 import * as S from "./styles";
 import { Icon } from "@iconify/react";
 import { SkillDetails } from "../../../../shared/components/SkillDetails";
 import AdventureContext from "../../../../shared/context/AdventureContext";
 import { BoardStore } from "../../../../shared/store/board.Store";
 import LoadingContext from "../../../../shared/context/LoadingContext";
+import { Modal } from "../../../../shared/components/Modal";
+import { MissionType } from "../../../../@types/app.types";
+import { MissionEnum } from "../../../../@types/constants.types";
 
 export default function CharBarView() {
   const [loading, setLoading] = useContext(LoadingContext);
   const [adventure, setAdventure] = useContext(AdventureContext);
+  const [isOpenMissions, setIsOpenMissions] = useState(false);
 
   const calcLifePerc = () =>
     adventure?.character?.currentLife !== 0
@@ -38,6 +42,31 @@ export default function CharBarView() {
       .finally(() => {
         setLoading(false);
       });
+  };
+
+  const renderMissions = (missions: MissionType[], level = 0): any => {
+    return (
+      <S.MissionContent>
+        {missions.map((mission) => (
+          <>
+            <S.MissionItem
+              marginLeft={level}
+              isMain={mission.type === MissionEnum.Main}
+            >
+              <Icon icon="icon-park-outline:circle-two-line" />
+              {mission.description}
+            </S.MissionItem>
+            {mission.items.length > 0 ? (
+              renderMissions(mission.items ?? [], ++level)
+            ) : (
+              <></>
+            )}
+
+            {mission.type === MissionEnum.Main ? <hr /> : <></>}
+          </>
+        ))}
+      </S.MissionContent>
+    );
   };
 
   return (
@@ -71,14 +100,8 @@ export default function CharBarView() {
         ))}
       </S.ActionBar>
       <S.Itens>
-        <div className="item">
+        <div className="item" onClick={() => setIsOpenMissions(true)}>
           <Icon icon="grommet-icons:script" />
-          <div className="popup">
-            <div className="main">Missão principal</div>
-            <div className="text">{adventure?.mainGoal}</div>
-            <div className="second">Secundárias</div>
-            <div className="text">{adventure?.currentGoal}</div>
-          </div>
         </div>
         <div className="item">
           <Icon icon="ph:treasure-chest" />
@@ -92,6 +115,17 @@ export default function CharBarView() {
       >
         Finalizar Turno
       </S.EndTurnBtn>
+
+      <Modal
+        isOpen={isOpenMissions}
+        onClose={() => setIsOpenMissions(false)}
+        title="Missões"
+      >
+        <>
+          <hr />
+          {renderMissions(adventure?.missions ?? [])}
+        </>
+      </Modal>
     </S.Content>
   );
 }

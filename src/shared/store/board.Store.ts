@@ -26,4 +26,14 @@ export class BoardStore {
     const result = await Api.post(`/board/endTurn?adventureId=${adventureId}`);
     return result.data;
   }
+
+  async changeLocation(
+    adventureId: string,
+    locationId: string
+  ): Promise<AdventureType | undefined> {
+    const result = await Api.post(
+      `/board/changeLocation?adventureId=${adventureId}&locationId=${locationId}`
+    );
+    return result.data;
+  }
 }

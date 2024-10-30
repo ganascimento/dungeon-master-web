@@ -41,3 +41,14 @@ export enum MoveEnum {
   Moviment = 1,
   Skill = 2,
 }
+
+export enum MissionEnum {
+  Main = 1,
+  Secondary = 2,
+  Sub = 3,
+}
+
+export enum Boardenum {
+  Travel = "travel",
+  Person = "person",
+}

@@ -2,16 +2,20 @@ import { Icon } from "@iconify/react";
 import * as S from "./styles";
 import { useContext } from "react";
 import ChatContext from "../../../../../../shared/context/ChatContext";
-import { PromptEnum } from "../../../../../../@types/constants.types";
+import {
+  Boardenum,
+  PromptEnum,
+} from "../../../../../../@types/constants.types";
 import { TalkStore } from "../../../../../../shared/store/talk.store";
 import AdventureContext from "../../../../../../shared/context/AdventureContext";
 import LoadingContext from "../../../../../../shared/context/LoadingContext";
+import { BoardStore } from "../../../../../../shared/store/board.Store";
 
 type Props = {
   playerInfo: any;
 };
 
-export default function PlayerInfo(props: Props) {
+export default function BoardInfo(props: Props) {
   const [adventure, setAdventure] = useContext(AdventureContext);
   const [, setLoading] = useContext(LoadingContext);
   const [chat, setChat] = useContext(ChatContext);
@@ -40,8 +44,26 @@ export default function PlayerInfo(props: Props) {
       });
   };
 
+  const onChangeLocation = () => {
+    setLoading(true);
+    new BoardStore()
+      .changeLocation(adventure?.id!, props.playerInfo.ident)
+      .then((e) => {
+        if (!!e) setAdventure(e);
+      })
+      .finally(() => {
+        setLoading(false);
+      });
+  };
+
   const isMyChar = (): boolean =>
     props.playerInfo.ident === adventure?.character?.ident;
+
+  const getX = () =>
+    props.playerInfo.positionX < 0 ? 0 : props.playerInfo.positionX;
+
+  const getY = () =>
+    props.playerInfo.positionY < 0 ? 0 : props.playerInfo.positionY;
 
   if (
     adventure?.location?.battle?.running &&
@@ -51,8 +73,8 @@ export default function PlayerInfo(props: Props) {
     return (
       <S.PeronInfo
         id="peronInfoItem"
-        positionX={props.playerInfo.positionX}
-        positionY={props.playerInfo.positionY}
+        positionX={getX()}
+        positionY={getY()}
         selected={props.playerInfo?.ident === chat?.ident}
       >
         <div className="item">
@@ -72,11 +94,36 @@ export default function PlayerInfo(props: Props) {
     );
   }
 
+  if (props.playerInfo.boardType === Boardenum.Travel) {
+    console.log("test");
+    return (
+      <S.PeronInfo
+        id="peronInfoItem"
+        positionX={getX()}
+        positionY={getY()}
+        selected={props.playerInfo?.ident === chat?.ident}
+      >
+        <div className="item">
+          <span>Nome:</span> {props.playerInfo.name}
+        </div>
+        <hr />
+        <div className="contentBtn">
+          <div
+            title={`Viajar para ${props.playerInfo.name}`}
+            onClick={onChangeLocation}
+          >
+            <Icon icon="tabler:location" />
+          </div>
+        </div>
+      </S.PeronInfo>
+    );
+  }
+
   return props.playerInfo.show ? (
     <S.PeronInfo
       id="peronInfoItem"
-      positionX={props.playerInfo.positionX}
-      positionY={props.playerInfo.positionY}
+      positionX={getX()}
+      positionY={getY()}
       selected={props.playerInfo?.ident === chat?.ident}
     >
       <div className="item">

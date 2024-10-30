@@ -2,6 +2,7 @@ import {
   AdventureLogEnum,
   CharacterTypeEnum,
   LocationEnum,
+  MissionEnum,
   MoveEnum,
   PromptEnum,
   SkillEnum,
@@ -17,8 +18,8 @@ export type AdventureType = {
   allies?: CharacterType[];
   adventureLogs?: AdventureLogType[];
   location?: LocationType;
-  mainGoal?: string;
-  currentGoal?: string;
+  missions?: MissionType[];
+  locations?: LocationMinType[];
 };
 
 export type RaceType = {
@@ -179,4 +180,19 @@ export type CharacterMoveRequestType = {
   positions: PositionType[];
   type: MoveEnum;
   skillId?: string;
+};
+
+export type MissionType = {
+  ident: string;
+  description: string;
+  type: MissionEnum;
+  completed: boolean;
+  items: MissionType[];
+};
+
+export type LocationMinType = {
+  ident: string;
+  name: string;
+  type: LocationEnum;
+  mapPosition: PositionType;
 };
