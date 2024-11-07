@@ -6,9 +6,8 @@ import {
   TokenType,
 } from "../../../../../@types/app.types";
 import {
-  Boardenum,
+  BattleEnum,
   CharacterTypeEnum,
-  LocationEnum,
   MoveEnum,
 } from "../../../../../@types/constants.types";
 import { BoardStore } from "../../../../../shared/store/board.Store";
@@ -56,80 +55,25 @@ export const OnBoardClick = (
     setLoadingCtx,
   };
 
-  if (adventure.location?.battle?.running) BattleClick(propData);
-  else NoBattleClick(propData);
-};
-
-const NoBattleClick = ({
-  event,
-  adventure,
-  setAdventure,
-  tokens,
-  setTokens,
-  playerInfo,
-  setPlayerInfo,
-  matrixX,
-  matrixY,
-  elementInPosition,
-  setLoadingCtx,
-}: ClickActionType) => {
-  if (elementInPosition?.token?.type === CharacterTypeEnum.Principal) {
-    setPlayerInfo({ ...playerInfo, show: false, boardType: undefined });
-    return;
+  if (adventure?.battle?.status === BattleEnum.InProgress) {
+    const isReturn = BattleClick(propData);
+    if (isReturn) return;
   }
 
-  if (!elementInPosition) {
-    setTokens(
-      [...tokens].map((token) => {
-        if (
-          !token.isMyChar ||
-          (token.matrix.x === matrixX && token.matrix.y === matrixY)
-        )
-          return token;
-
-        if (adventure.location?.type === LocationEnum.Safe) {
-          token.allowGo = true;
-          if (
-            token.moveState === 1 &&
-            token.moveIntend.x === matrixX &&
-            token.moveIntend.y === matrixY
-          ) {
-            token.moveState = 0;
-            token.matrix.x = matrixX;
-            token.matrix.y = matrixY;
-          } else {
-            token.moveState = 1;
-            token.moveIntend = {
-              x: matrixX,
-              y: matrixY,
-            };
-          }
-          return token;
-        }
-
-        return MoveStrict(
-          token,
-          matrixX,
-          matrixY,
-          adventure,
-          setAdventure,
-          setLoadingCtx
-        );
-      })
-    );
-
-    setPlayerInfo({ ...playerInfo, show: false });
-    return;
+  if (
+    !!elementInPosition &&
+    !!elementInPosition.token &&
+    !!elementInPosition.token.isMyChar
+  ) {
+    setAdventure({
+      ...adventure,
+      characters: [...(adventure.characters ?? [])].map((character) => {
+        character.selected = false;
+        if (character.id === elementInPosition.id) character.selected = true;
+        return character;
+      }),
+    });
   }
-
-  setPlayerInfo({
-    ...playerInfo,
-    show: true,
-    positionX: event.pageX - 280,
-    positionY: event.pageY - 115,
-    ...elementInPosition,
-    boardType: elementInPosition.boardType,
-  });
 };
 
 const BattleClick = ({
@@ -144,51 +88,86 @@ const BattleClick = ({
   matrixY,
   elementInPosition,
   setLoadingCtx,
-}: ClickActionType) => {
-  const skill = adventure.character?.skills?.find((x) => x.selected);
+}: ClickActionType): boolean => {
+  const character = adventure?.characters?.find((c) => c.selected);
+  const activeTurnIdent = adventure?.battle?.turnOrder?.find(
+    (turnOrder) => turnOrder.active
+  );
+  if (!!character && character.id === activeTurnIdent?.characterIdent) {
+    const skill = character.skills?.find((x) => x.selected);
+    if (!skill && !elementInPosition) {
+      if (character.currentStamina === 0) return false;
+      setTokens(
+        [...tokens].map((token) => {
+          return MoveStrict(
+            token,
+            matrixX,
+            matrixY,
+            adventure,
+            setAdventure,
+            setLoadingCtx
+          );
+        })
+      );
+      setPlayerInfo({ show: false });
+      return false;
+    }
+    if (!!skill) {
+      const positions: any[] = [];
+      if (!!elementInPosition?.token?.matrix)
+        positions.push(elementInPosition.token.matrix);
+      else positions.push({ x: matrixX, y: matrixY });
 
-  if (!skill && !elementInPosition) {
-    if (adventure.character?.currentStamina === 0) return;
-    setTokens(
-      [...tokens].map((token) => {
-        return MoveStrict(
-          token,
-          matrixX,
-          matrixY,
-          adventure,
-          setAdventure,
-          setLoadingCtx
-        );
-      })
-    );
-    setPlayerInfo({ show: false });
-    return;
+      if (
+        ((!elementInPosition || elementInPosition?.token?.death) &&
+          skill.area === 0) ||
+        !checkValidCast(skill, character.token?.matrix!, positions)
+      )
+        return true;
+
+      if (skill.target > 1) {
+        if (!skill.selectedPositions) skill.selectedPositions = [];
+        skill.selectedPositions.push(positions[0]);
+      }
+
+      if (
+        skill.target > 1 &&
+        skill.target !== skill.selectedPositions?.length
+      ) {
+        setAdventure({
+          ...adventure,
+          characters: [...(adventure.characters ?? [])].map((char) => {
+            if (char.selected) {
+              char.skills = char.skills?.map((s) => {
+                if (s.id === skill.id)
+                  s.selectedPositions = skill.selectedPositions;
+                return s;
+              });
+            }
+            return char;
+          }),
+        });
+
+        return true;
+      }
+
+      OnCastSkill(adventure, setAdventure, setLoadingCtx, positions, skill);
+      setPlayerInfo({ show: false });
+      return true;
+    }
   }
 
-  if (!!skill) {
-    if (
-      (!elementInPosition || elementInPosition?.token?.death) &&
-      skill.area === 0
-    )
-      return;
-    let positions = [];
+  if (elementInPosition?.type === CharacterTypeEnum.Enemy)
+    setPlayerInfo({
+      ...playerInfo,
+      show: true,
+      positionX: event.pageX - 280,
+      positionY: event.pageY - 115,
+      ...elementInPosition,
+    });
+  else setPlayerInfo({ show: false });
 
-    if (!!elementInPosition?.token?.matrix)
-      positions.push(elementInPosition.token.matrix);
-    else positions.push({ x: matrixX, y: matrixY });
-
-    onCastSkill(adventure, setAdventure, setLoadingCtx, positions);
-    setPlayerInfo({ show: false });
-    return;
-  }
-
-  setPlayerInfo({
-    ...playerInfo,
-    show: true,
-    positionX: event.pageX - 280,
-    positionY: event.pageY - 115,
-    ...elementInPosition,
-  });
+  return false;
 };
 
 const GetElementInPosition = (
@@ -198,38 +177,18 @@ const GetElementInPosition = (
 ): any => {
   let element: any;
 
-  adventure.locations
-    ?.filter((location) => !!location.mapPosition)
-    ?.forEach((location) => {
-      if (
-        location.mapPosition.x === matrixX &&
-        location.mapPosition.y === matrixY
-      )
-        element = {
-          ...location,
-          boardType: Boardenum.Travel,
-        };
-    });
-
-  if (!!element) return element;
-
-  if (
-    adventure!.character!.token?.matrix.x === matrixX &&
-    adventure!.character!.token?.matrix.y === matrixY
-  )
-    return {
-      ...adventure!.character,
-      boardType: Boardenum.Person,
-    };
-
-  adventure.location?.npcs?.forEach((npc) => {
-    if (npc.token?.matrix.x === matrixX && npc.token?.matrix.y === matrixY)
-      element = npc;
+  adventure!.characters?.forEach((character) => {
+    if (
+      character!.token?.matrix.x === matrixX &&
+      character!.token?.matrix.y === matrixY
+    ) {
+      element = character;
+    }
   });
 
   if (!!element) return element;
 
-  adventure.location?.battle?.enemies?.forEach((enemy) => {
+  adventure?.battle?.enemies?.forEach((enemy) => {
     if (enemy.token?.matrix.x === matrixX && enemy.token?.matrix.y === matrixY)
       element = enemy;
   });
@@ -282,9 +241,9 @@ const SendPosition = (
 ) => {
   setLoadingCtx(true);
 
-  if (adventure.location?.battle?.running) {
+  if (adventure?.battle?.status === BattleEnum.InProgress) {
     new BoardStore()
-      .characterMove({
+      .characterAction({
         adventureId: adventure.id!,
         positions: [position],
         type: MoveEnum.Moviment,
@@ -295,39 +254,21 @@ const SendPosition = (
       .finally(() => {
         setLoadingCtx(false);
       });
-  } else {
-    new BoardStore()
-      .sendPosition({
-        adventureId: adventure.id!,
-        position,
-      })
-      .then((e) => {
-        if (!!e) setAdventure(e);
-      })
-      .finally(() => {
-        setLoadingCtx(false);
-      });
   }
 };
 
-const onCastSkill = (
+const OnCastSkill = (
   adventure: AdventureType,
   setAdventure: (value: AdventureType) => void,
   setLoadingCtx: (value: boolean) => void,
-  positions: PositionType[]
+  positions: PositionType[],
+  skill: SkillType
 ) => {
-  const skill = adventure?.character?.skills?.find((x) => x.selected);
-  if (
-    !skill ||
-    !checkValidCast(skill, adventure.character?.token?.matrix!, positions)
-  )
-    return;
-
   setLoadingCtx(true);
   new BoardStore()
-    .characterMove({
+    .characterAction({
       adventureId: adventure?.id!,
-      positions,
+      positions: skill.selectedPositions ?? positions,
       type: MoveEnum.Skill,
       skillId: skill.id,
     })

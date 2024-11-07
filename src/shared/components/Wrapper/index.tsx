@@ -6,7 +6,12 @@ type Props = {
   children: ReactNode;
   flexDirection?: "row" | "column";
   alignItems?: "center" | "start" | "end";
-  justifyContent?: "space-between" | "flex-start" | "center" | "end";
+  justifyContent?:
+    | "space-between"
+    | "flex-start"
+    | "center"
+    | "end"
+    | "space-around";
   margin?: string;
   gap?: string;
   width?: string;

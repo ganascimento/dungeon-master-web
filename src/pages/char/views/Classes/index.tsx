@@ -1,6 +1,7 @@
 import { Icon } from "@iconify/react";
 import { CharacterType, ClassType } from "../../../../@types/app.types";
 import * as S from "./styles";
+import { AbilitiesList } from "../../../../shared/ultils/abilitiesList";
 
 type Props = {
   classes?: ClassType[];
@@ -10,7 +11,7 @@ type Props = {
 
 export default function ClassView(props: Props) {
   const handleSelect = (value: ClassType) => {
-    props.setCharacter({ ...props.character, class: value });
+    props.setCharacter({ ...props.character, class: value, skills: [] });
   };
 
   return (
@@ -27,6 +28,20 @@ export default function ClassView(props: Props) {
               <Icon icon={c.icon} />
             </i>
             <span>{c.name}</span>
+
+            <div className="popup">
+              {AbilitiesList.map((ability) => (
+                <S.Ability>
+                  <div className="content-name">
+                    <div>{ability.icon}</div>
+                    <span>{ability.text}</span>
+                    <div className="value">
+                      {(c as any)[ability.field as any]}
+                    </div>
+                  </div>
+                </S.Ability>
+              ))}
+            </div>
           </S.Item>
         ))}
       </S.Content>

@@ -36,25 +36,14 @@ export const Ability = styled.div`
     font-size: 20px;
     gap: 12px;
 
-    .btn {
-      border: 2px ridge #b78846;
-      height: 28px;
-      width: 28px;
-      border-radius: 25px;
-      font-size: 12px;
-      display: flex;
-      align-items: center;
-      justify-content: center;
-      cursor: pointer;
-
-      svg {
-        color: white !important;
-      }
-    }
-
     .bonus {
       font-size: 15px;
+      width: 15px;
     }
+  }
+
+  .points {
+    width: 30px;
   }
 `;
 
@@ -77,4 +66,35 @@ export const Text = styled.div`
 
 export const Margin = styled.div`
   margin-bottom: 5vh;
+`;
+
+export const ResetBtn = styled.div`
+  font-size: 23px;
+  cursor: pointer;
+  text-shadow: #b78846 2px 2px 2px;
+  transition: 0.3s;
+
+  &:hover {
+    text-shadow: none;
+    transition: 0.3s;
+  }
+`;
+
+type BtnProps = {
+  disabled: boolean;
+};
+export const Button = styled.div<BtnProps>`
+  border: 2px ridge ${(props) => (props.disabled ? "#b7884650" : "#b78846")};
+  height: 28px;
+  width: 28px;
+  border-radius: 25px;
+  font-size: 12px;
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  cursor: ${(props) => (props.disabled ? "not-allowed" : "pointer")};
+
+  svg {
+    color: white !important;
+  }
 `;

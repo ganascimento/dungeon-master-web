@@ -26,9 +26,9 @@ export const Background = styled.div`
 
 export const ContentModal = styled.div`
   z-index: 7777778;
-  max-width: 1200px;
-  width: 90%;
-  height: 85vh;
+  max-width: 1100px;
+  width: 80%;
+  height: auto;
   background-color: #302320;
   overflow-y: auto;
 `;

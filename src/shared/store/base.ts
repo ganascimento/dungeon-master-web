@@ -1,14 +1,15 @@
 /* eslint-disable @typescript-eslint/no-explicit-any */
 import axios from "axios";
+import { getToken } from "../security/authentication";
 
 const getHeader = (): any => {
-  // const token = getToken();
+  const token = getToken();
 
-  // if (token) {
-  // 	return {
-  // 		Authorization: `Bearer ${token}`,
-  // 	};
-  // }
+  if (token) {
+    return {
+      Authorization: `Bearer ${token}`,
+    };
+  }
 
   return {};
 };
@@ -18,18 +19,18 @@ const Api = axios.create({
   headers: getHeader(),
 });
 
-// Api.interceptors.response.use(
-// 	response => response,
-// 	error => {
-// 		const status = error.response ? error.response.status : null;
+Api.interceptors.response.use(
+  (response) => response,
+  (error) => {
+    const status = error.response ? error.response.status : null;
 
-// 		if (status === 401) {
-// 			error.config.headers['Authorization'] = `Bearer ${getToken()}`;
-// 			return axios.request(error.config);
-// 		}
+    if (status === 401) {
+      error.config.headers["Authorization"] = `Bearer ${getToken()}`;
+      return axios.request(error.config);
+    }
 
-// 		return Promise.reject(error);
-// 	},
-// );
+    return Promise.reject(error);
+  }
+);
 
 export { Api };

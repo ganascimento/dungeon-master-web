@@ -70,7 +70,7 @@ export const Item = styled.div<ItemProps>`
     padding: 8px 10px;
     position: absolute;
     z-index: 1;
-    bottom: 125%;
+    bottom: 105%;
     left: ${(props) => (props.iconPosition === "normal" ? "50%" : "100%")};
     margin-left: ${(props) =>
       props.iconPosition === "normal" ? "-80px" : "-40px"};
@@ -98,6 +98,7 @@ export const Item = styled.div<ItemProps>`
       color: rgba(255, 255, 255, 0.6);
       margin-bottom: 12px;
       color: #ddd;
+      text-align: start;
     }
     .damage {
       font-size: 21px;

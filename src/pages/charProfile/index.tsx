@@ -1,23 +1,27 @@
 /* eslint-disable react-hooks/exhaustive-deps */
-import { useContext, useEffect } from "react";
+import { useContext, useEffect, useState } from "react";
 import { Content } from "../../shared/components/Content";
 import * as S from "./styles";
 import { useNavigate } from "react-router-dom";
 import { ROUTER_PATHS } from "../../shared/router/router.path";
 import { AbilityList } from "../../shared/components/AbilityList";
-import { GameButton } from "../../shared/components/GameButton";
 import AdventureContext from "../../shared/context/AdventureContext";
-import { AdventureStore } from "../../shared/store/adventure.store";
-import LoaderContext from "../../shared/context/LoaderContext";
 import { Icon } from "@iconify/react";
 import { SkillDetails } from "../../shared/components/SkillDetails";
+import { CharacterType } from "../../@types/app.types";
+import { GameButton } from "../../shared/components/GameButton";
+import Wrapper from "../../shared/components/Wrapper";
+import { BattleEnum } from "../../@types/constants.types";
 
 export default function CharProfilePage() {
   const [adventure, setAdventure] = useContext(AdventureContext);
-  const [, setLoading] = useContext(LoaderContext);
+  const [character, setCharacter] = useState<CharacterType>();
 
   const navigate = useNavigate();
-  const adventureStore = new AdventureStore();
+
+  useEffect(() => {
+    setCharacter(adventure?.characters?.find((c) => c.selected));
+  }, [adventure]);
 
   useEffect(() => {
     if (!adventure) {
@@ -26,21 +30,26 @@ export default function CharProfilePage() {
     }
   }, []);
 
-  const handleGoGame = async () => {
-    if (!adventure?.started) {
-      setLoading(true);
-
-      try {
-        await adventureStore.start(adventure!);
-        const result = await adventureStore.getById(adventure!.id!);
-        setAdventure(result);
-      } finally {
-        setLoading(false);
-      }
-    }
-
-    navigate(ROUTER_PATHS.Game);
+  const handleBack = () => {
+    navigate(-1);
   };
+
+  const handleGoToUpLevel = () => {
+    navigate(ROUTER_PATHS.CharUpLevel);
+  };
+
+  const handleNextPersonToUpLevel = () => {
+    setAdventure({
+      ...adventure,
+      characters: [...(adventure?.characters ?? [])].map((char) => {
+        char.selected = false;
+        if (char.allowUp && char.id !== character?.id) char.selected = true;
+        return char;
+      }),
+    });
+  };
+
+  if (!character) return <></>;
 
   return (
     <Content type={2}>
@@ -48,31 +57,44 @@ export default function CharProfilePage() {
         <S.ContentProfile>
           <div className="content-header">
             <div className="header-icon">
-              {<Icon icon={adventure?.character?.class?.icon ?? ""} />}
+              {<Icon icon={character.class?.icon ?? ""} />}
             </div>
           </div>
-          <S.Name>{adventure?.character?.name}</S.Name>
-          <S.Race>{adventure?.character?.race?.name}</S.Race>
-
-          <AbilityList character={adventure?.character} />
-
+          <S.Name>{character.name}</S.Name>
+          <S.Race>{character.race?.name}</S.Race>
+          <AbilityList character={character} />
           <S.ContentSkills>
-            {adventure?.character?.skills?.map((skill, index) => (
-              <SkillDetails
-                skill={skill}
-                character={adventure!.character!}
-                key={index}
-              />
+            {character.skills?.map((skill, index) => (
+              <SkillDetails skill={skill} character={character} key={index} />
             ))}
           </S.ContentSkills>
         </S.ContentProfile>
-        <S.ContentImage>
-          <GameButton
-            text={adventure?.started ? "Jogar" : "Começar"}
-            onClick={handleGoGame}
-          />
-        </S.ContentImage>
       </S.Content>
+
+      <Wrapper justifyContent="end" width="100%">
+        <GameButton onClick={handleBack} text="Voltar" />
+
+        {!adventure?.battle || adventure?.battle?.status === BattleEnum.Win ? (
+          <>
+            {!!adventure?.characters?.find((char) => char.allowUp) ? (
+              <GameButton
+                onClick={handleNextPersonToUpLevel}
+                text="Próximo personagem"
+              />
+            ) : (
+              <></>
+            )}
+
+            {character.allowUp ? (
+              <GameButton onClick={handleGoToUpLevel} text="Subir de nível" />
+            ) : (
+              <></>
+            )}
+          </>
+        ) : (
+          <></>
+        )}
+      </Wrapper>
     </Content>
   );
 }

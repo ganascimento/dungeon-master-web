@@ -48,8 +48,10 @@ export const SkillDetails = (props: Props) => {
       props.setCharacter!({
         ...props.character,
         skills: [...(props.character.skills ?? [])].map((x) => {
-          if (x.id === props.skill.id) x.selected = !x.selected;
-          else x.selected = false;
+          if (x.id === props.skill.id) {
+            x.selected = !x.selected;
+            x.selectedPositions = undefined;
+          } else x.selected = false;
           return x;
         }),
       });

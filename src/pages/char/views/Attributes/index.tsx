@@ -8,6 +8,7 @@ import { CalcTotalPoints } from "../../../../shared/ultils/calcTotalPoints";
 import { AbilitiesList } from "../../../../shared/ultils/abilitiesList";
 import { CalcAttributeBonus } from "../../../../shared/ultils/calcAttributeBonus";
 import { RenderBonusString } from "../../../../shared/ultils/damageUltils";
+import Wrapper from "../../../../shared/components/Wrapper";
 
 type AbilityType = {
   field?: string;
@@ -24,10 +25,16 @@ type Props = {
 
 export default function AttributesView(props: Props) {
   const [abilities, setAbilities] = useState<AbilityType[]>(AbilitiesList);
-  const [totalPoints, setTotalPoints] = useState(25);
+  const [totalPoints, setTotalPoints] = useState(20);
 
   useEffect(() => {
     setTotalPoints(CalcTotalPoints(props.character));
+    setAbilities(
+      abilities.map((ability) => {
+        ability.points = (props.character as any)[ability.field as any];
+        return ability;
+      })
+    );
   }, []);
 
   const handleAddPoints = (text: string) => {
@@ -50,7 +57,7 @@ export default function AttributesView(props: Props) {
   };
 
   const handleRemovePoints = (text: string) => {
-    if (totalPoints === 25) return;
+    if (totalPoints === 20) return;
 
     setTotalPoints(totalPoints + 1);
     setAbilities(
@@ -70,7 +77,7 @@ export default function AttributesView(props: Props) {
 
   const handleReset = () => {
     setAbilities(AbilitiesList);
-    setTotalPoints(25);
+    setTotalPoints(20);
   };
 
   return (
@@ -87,23 +94,35 @@ export default function AttributesView(props: Props) {
             <span>{ability.text}</span>
           </div>
           <div className="content-btn">
-            <div
-              className="btn"
-              onClick={() => handleRemovePoints(ability.text ?? "")}
+            <S.Button
+              disabled={ability.points === 8}
+              onClick={
+                ability.points === 8
+                  ? undefined
+                  : () => handleRemovePoints(ability.text ?? "")
+              }
             >
               <FaMinus />
-            </div>
-            {ability.points}
-            <div
-              className="btn"
-              onClick={() => handleAddPoints(ability.text ?? "")}
+            </S.Button>
+            <div className="points">{ability.points}</div>
+            <S.Button
+              disabled={ability.points === 20}
+              onClick={
+                ability.points === 20
+                  ? undefined
+                  : () => handleAddPoints(ability.text ?? "")
+              }
             >
               <FaPlus />
-            </div>
+            </S.Button>
             <div className="bonus">{RenderBonusString(ability.bonus ?? 0)}</div>
           </div>
         </S.Ability>
       ))}
+
+      <Wrapper alignItems="center" justifyContent="center" width="100%">
+        <S.ResetBtn onClick={handleReset}>Resetar</S.ResetBtn>
+      </Wrapper>
     </>
   );
 }

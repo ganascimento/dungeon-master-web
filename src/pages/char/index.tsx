@@ -20,13 +20,11 @@ import {
 import { CalcTotalPoints } from "../../shared/ultils/calcTotalPoints";
 import { BsInfoLg } from "react-icons/bs";
 import InfoView from "./views/Info";
-import { AdventureStore } from "../../shared/store/adventure.store";
-import AdventureContext from "../../shared/context/AdventureContext";
-import { useNavigate } from "react-router-dom";
-import { ROUTER_PATHS } from "../../shared/router/router.path";
+import { useNavigate, useParams } from "react-router-dom";
 import SkillView from "./views/Skills";
 import { Icon } from "@iconify/react";
 import { SkillStore } from "../../shared/store/skill.store";
+import { CharacterStore } from "../../shared/store/character.store";
 
 type CharCreationType = {
   icon: ReactNode;
@@ -71,13 +69,10 @@ const initialValue: CharacterType = {
   dexterity: 8,
   constitution: 8,
   intelligence: 8,
-  wisdom: 8,
-  charisma: 8,
 };
 
 export default function CharPage() {
   const [, setLoading] = useContext(LoaderContext);
-  const [adventure, setAdventure] = useContext(AdventureContext);
 
   const [step, setStep] = useState(0);
   const [races, setRaces] = useState<RaceType[]>();
@@ -86,20 +81,18 @@ export default function CharPage() {
   const [character, setCharacter] = useState<CharacterType>(initialValue);
 
   const navigate = useNavigate();
+  const params = useParams();
 
   const classStore = new ClassStore();
   const raceStore = new RaceStore();
   const skillStore = new SkillStore();
-  const adventureStore = new AdventureStore();
+  const characterStore = new CharacterStore();
 
   useEffect(() => {
-    if (!adventure) {
-      navigate(ROUTER_PATHS.Home);
-      return;
-    }
     findClasses();
     findRaces();
     findSkills();
+    getCharacter();
   }, []);
 
   const findClasses = async () => {
@@ -127,6 +120,17 @@ export default function CharPage() {
     try {
       const result = await skillStore.getAll();
       setSkills(result);
+    } finally {
+      setLoading(false);
+    }
+  };
+
+  const getCharacter = async () => {
+    if (!params.id || params.id === "0") return;
+    setLoading(true);
+    try {
+      const result = await characterStore.getById(params.id as string);
+      if (!!result) setCharacter(result);
     } finally {
       setLoading(false);
     }
@@ -167,14 +171,15 @@ export default function CharPage() {
     }
   };
 
+  const handleBack = async () => {
+    navigate(-1);
+  };
+
   const handleSaveChar = async () => {
     setLoading(true);
-
     try {
-      await adventureStore.saveCharacter(adventure!.id!, character);
-      const result = await adventureStore.getById(adventure!.id!);
-      setAdventure(result);
-      navigate(ROUTER_PATHS.CharProfile);
+      await characterStore.save(character);
+      handleBack();
     } finally {
       setLoading(false);
     }
@@ -208,13 +213,18 @@ export default function CharPage() {
           </div>
           {renderSteps()}
         </S.ContentSecond>
-        {charCreationData.filter((x) => !x.finished(character)).length === 0 ? (
-          <S.ContentImage>
-            <GameButton text="Criar personagem" onClick={handleSaveChar} />
-          </S.ContentImage>
-        ) : (
-          <></>
-        )}
+        <S.ContentImage>
+          <GameButton text="Voltar" onClick={handleBack} />
+          {charCreationData.filter((x) => !x.finished(character)).length ===
+          0 ? (
+            <GameButton
+              text={params.id === "0" ? "Criar" : "Salvar"}
+              onClick={handleSaveChar}
+            />
+          ) : (
+            <></>
+          )}
+        </S.ContentImage>
       </S.Content>
     </Content>
   );

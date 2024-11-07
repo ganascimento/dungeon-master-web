@@ -9,6 +9,7 @@ type Props = {
   marginBottom?: string;
   title?: string;
   loading?: boolean;
+  active?: boolean;
 };
 
 export const MenuButton = (props: Props) => {

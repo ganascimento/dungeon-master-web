@@ -4,6 +4,7 @@ type ContentProps = {
   disabled?: boolean;
   width?: number;
   marginBottom?: string;
+  active?: boolean;
 };
 
 export const Content = styled.div<ContentProps>`
@@ -26,7 +27,8 @@ export const SubContent = styled.div<ContentProps>`
   border-radius: 10px;
   position: absolute;
   margin-top: -15px;
-  border-bottom: 5px solid #30231e;
+  border-bottom: ${(props) =>
+    props.active ? "1px solid black" : "5px solid #30231e"};
   display: flex;
   align-items: center;
   justify-content: center;

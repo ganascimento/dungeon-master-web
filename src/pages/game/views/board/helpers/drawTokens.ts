@@ -3,8 +3,6 @@ import { CharacterTypeEnum } from "../../../../../@types/constants.types";
 import { GetPositionFromMatrix } from "./getSizes";
 
 const myCharIdentColor = "yellow";
-const npcIdentColor = "black";
-const allyIdentColor = "blue";
 const enemyIdentColor = "red";
 
 export const DrawTokens = (
@@ -65,14 +63,8 @@ const drawToken = (
   context.arc(positionX, positionY, 20, 0, 2 * Math.PI);
   context.lineWidth = 3;
   if (token.isMyChar) context.strokeStyle = myCharIdentColor;
-  else if (
-    token.type === CharacterTypeEnum.Ally ||
-    token.type === CharacterTypeEnum.Principal
-  )
-    context.strokeStyle = allyIdentColor;
   else if (token.type === CharacterTypeEnum.Enemy)
     context.strokeStyle = enemyIdentColor;
-  else context.strokeStyle = npcIdentColor;
   context.stroke();
 };
 
@@ -89,7 +81,7 @@ const drawClickPoint = (
   );
 
   context.beginPath();
-  if (token.allowGo) context.fillStyle = "rgba(0,255,0,.4)";
+  if (token.allowGo) context.fillStyle = "rgba(0,255,0,.8)";
   else context.fillStyle = "rgba(255,0,0,.4)";
   context.fillRect(positionX, positionY, boardConfig.size, boardConfig.size);
 };

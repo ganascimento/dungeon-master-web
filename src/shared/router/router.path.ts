@@ -1,7 +1,8 @@
 export enum ROUTER_PATHS {
   Home = "/",
-  Adventure = "/adventure",
-  Char = "/character",
+  Login = "/login",
+  Char = "/character/:id",
   CharProfile = "/character-profile",
   Game = "/game",
+  CharUpLevel = "/character-up-level",
 }

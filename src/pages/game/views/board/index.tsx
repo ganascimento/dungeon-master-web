@@ -5,17 +5,15 @@ import { DrawGrid } from "./helpers/drawGrid";
 import { DrawTokens } from "./helpers/drawTokens";
 import { BoardConfigType, TokenType } from "../../../../@types/app.types";
 import AdventureContext from "../../../../shared/context/AdventureContext";
-import { GetAdventureTokens } from "./helpers/getAdventureTokens";
 import { OnBoardClick } from "./helpers/onBoardClick";
 import { GetImagePath } from "./helpers/getBoardImage";
 import { DrawTraps } from "./helpers/drawTraps";
 import { LoadImages } from "./helpers/loadImages";
 import { GetBoardSize } from "./helpers/getSizes";
-import { DrawGoal } from "./helpers/drawGoal";
 import LoadingContext from "../../../../shared/context/LoadingContext";
-import ChatContext from "../../../../shared/context/ChatContext";
 import { DrawMouseMove } from "./helpers/drawMouseMove";
-import { DrawTravelPoints } from "./helpers/drawTravelPoints";
+import { GetAdventureTokens } from "./helpers/getAdventureTokens";
+import { DrawTargets } from "./helpers/drawTargets";
 
 const initialValue: BoardConfigType = {
   height: 780,
@@ -33,7 +31,6 @@ type Props = {
 export default function BoardView(props: Props) {
   const [adventure, setAdventure] = useContext(AdventureContext);
   const [, setLoadingCtx] = useContext(LoadingContext);
-  const [chat] = useContext(ChatContext);
   const [loading] = useContext(LoadingContext);
   const [boardConfig, setBoardConfig] = useState<BoardConfigType>(initialValue);
   const [frameRef, setFrameRef] = useState<any>();
@@ -41,6 +38,10 @@ export default function BoardView(props: Props) {
   const [lastMouseMoveEvent, setLastMouseMoveEvent] = useState<any>();
 
   const canvasRef = useRef(null);
+
+  useEffect(() => {
+    setTokens(GetAdventureTokens(adventure!));
+  }, [adventure]);
 
   useEffect(() => {
     const value = {
@@ -53,11 +54,6 @@ export default function BoardView(props: Props) {
     setBoardConfig(value);
     window.onresize = () => onResizeScreen(value);
   }, []);
-
-  useEffect(() => {
-    setTokens(GetAdventureTokens(adventure!));
-    if (!chat || !chat.ident) props.setPlayerInfo({ show: false });
-  }, [adventure]);
 
   useEffect(() => {
     if (!boardConfig || !boardConfig.context) return;
@@ -76,9 +72,8 @@ export default function BoardView(props: Props) {
       DrawGrid(boardConfig);
       DrawTokens(boardConfig, tokens);
       DrawTraps(boardConfig, adventure!);
-      DrawGoal(boardConfig, adventure!);
       DrawMouseMove(lastMouseMoveEvent, boardConfig, adventure!);
-      DrawTravelPoints(boardConfig, adventure!);
+      DrawTargets(boardConfig, adventure!);
 
       setFrameRef(window.requestAnimationFrame(render));
     };

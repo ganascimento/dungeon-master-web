@@ -1,32 +1,21 @@
 export enum CharacterTypeEnum {
   Principal = 1,
-  Ally = 2,
-  Enemy = 3,
-  Npc = 4,
-}
-
-export enum PromptEnum {
-  Talk = 3,
-  TalkMaster = 4,
-  PhysicalState = 11,
+  Enemy = 2,
 }
 
 export enum AdventureLogEnum {
   Environment = 1,
-  Npc = 2,
-  Character = 3,
-  Damage = 4,
-  Initiative = 5,
-  Turn = 6,
-  Battle = 7,
-  Health = 8,
-  Skill = 9,
-  PhysicalState = 10,
-}
-
-export enum LocationEnum {
-  Safe = 1,
-  Explore = 2,
+  Character = 2,
+  Damage = 3,
+  Initiative = 4,
+  Turn = 5,
+  Battle = 6,
+  Health = 7,
+  Skill = 8,
+  PhysicalState = 9,
+  Win = 10,
+  Passive = 11,
+  Effect = 12,
 }
 
 export enum SkillEnum {
@@ -42,13 +31,17 @@ export enum MoveEnum {
   Skill = 2,
 }
 
-export enum MissionEnum {
-  Main = 1,
-  Secondary = 2,
-  Sub = 3,
+export enum BattleEnum {
+  InProgress = 1,
+  Win = 2,
+  Lose = 3,
+  Finish = 4,
 }
 
-export enum Boardenum {
-  Travel = "travel",
-  Person = "person",
+export enum EffectEnum {
+  AttackRoll = 1,
+  DamageRoll = 2,
+  ArmorClass = 3,
+  Stamina = 4,
+  Bleeding = 5,
 }

@@ -5,9 +5,17 @@ export const CalcTotalPoints = (character: CharacterType) => {
     (character.strength ?? 0) +
     (character.dexterity ?? 0) +
     (character.constitution ?? 0) +
-    (character.intelligence ?? 0) +
-    (character.wisdom ?? 0) +
-    (character.charisma ?? 0);
+    (character.intelligence ?? 0);
 
-  return 25 - (total - 48);
+  return 20 - (total - 32);
+};
+
+export const CalcTotalLevelUp = (character: CharacterType) => {
+  const total =
+    (character.strength ?? 0) +
+    (character.dexterity ?? 0) +
+    (character.constitution ?? 0) +
+    (character.intelligence ?? 0);
+
+  return total - 32 - 20 - (character.level ?? 0) - 1;
 };

@@ -7,6 +7,8 @@ import { ROUTER_PATHS } from "../../../../shared/router/router.path";
 import { useContext } from "react";
 import AdventureContext from "../../../../shared/context/AdventureContext";
 import { AdventureStore } from "../../../../shared/store/adventure.store";
+import Wrapper from "../../../../shared/components/Wrapper";
+import { MenuButton } from "../../../../shared/components/MenuButton";
 
 type Props = {
   isOpen: boolean;
@@ -23,12 +25,7 @@ export default function SelectAdventureView(props: Props) {
   const handleClick = async (adventure: AdventureType) => {
     const result = await adventureStore.getById(adventure!.id!);
     setAdventure(result);
-
-    console.log(result);
-
-    if (!result?.character || !result.character.ident)
-      navigate(ROUTER_PATHS.Char);
-    else navigate(ROUTER_PATHS.CharProfile);
+    navigate(ROUTER_PATHS.Game);
   };
 
   return (
@@ -49,6 +46,21 @@ export default function SelectAdventureView(props: Props) {
             </i>
           </S.Flag>
         ))}
+
+        <Wrapper
+          justifyContent="end"
+          alignItems="end"
+          gap="10px"
+          height="auto"
+          margin="70px 0 0 0"
+        >
+          <MenuButton
+            text="Fechar"
+            marginBottom="0px"
+            width={150}
+            onClick={props.onClose}
+          />
+        </Wrapper>
       </>
     </Modal>
   );

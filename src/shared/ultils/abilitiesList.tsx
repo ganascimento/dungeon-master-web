@@ -2,11 +2,9 @@ import { GiBiceps } from "react-icons/gi";
 import { GiSkiBoot } from "react-icons/gi";
 import { GiMagicShield } from "react-icons/gi";
 import { GiSpellBook } from "react-icons/gi";
-import { GiWisdom } from "react-icons/gi";
 
 import { ReactNode } from "react";
 import { CharacterType } from "../../@types/app.types";
-import { Icon } from "@iconify/react";
 import { CalcAttributeBonus } from "./calcAttributeBonus";
 
 type AbilityType = {
@@ -43,20 +41,6 @@ export const AbilitiesList: AbilityType[] = [
     field: "intelligence",
     text: "Inteligência",
     icon: <GiSpellBook />,
-    points: 8,
-    bonus: CalcAttributeBonus(8),
-  },
-  {
-    field: "wisdom",
-    text: "Sabedoria",
-    icon: <GiWisdom />,
-    points: 8,
-    bonus: CalcAttributeBonus(8),
-  },
-  {
-    field: "charisma",
-    text: "Carisma",
-    icon: <Icon icon="fluent:handshake-24-filled" />,
     points: 8,
     bonus: CalcAttributeBonus(8),
   },

@@ -1,4 +1,8 @@
-import { AdventureType, CharacterType } from "../../@types/app.types";
+import {
+  AdventureType,
+  CreateAdventureType,
+  SaveAdventureCharacterType,
+} from "../../@types/app.types";
 import { Api } from "./base";
 
 export class AdventureStore {
@@ -13,23 +17,19 @@ export class AdventureStore {
     return result.data;
   }
 
-  async create(data: AdventureType): Promise<void> {
+  async create(data: CreateAdventureType): Promise<void> {
     await Api.post("/adventure", data);
   }
 
-  async start(data: AdventureType): Promise<void> {
-    await Api.post(`/adventure/${data.id}/start`);
+  async startBattle(data: AdventureType): Promise<AdventureType | null> {
+    const result = await Api.post(`/adventure/${data.id}/startBattle`);
+    return result.data;
   }
 
-  async saveCharacter(
-    adventureId: string,
-    character: CharacterType
-  ): Promise<void> {
-    await Api.put(`/adventure/${adventureId}/character`, {
-      ...character,
-      skillsIds: character.skills?.map((x) => x.id),
-      raceId: character.race?.id,
-      classId: character.class?.id,
-    });
+  async characterLevelUp(
+    data: SaveAdventureCharacterType
+  ): Promise<AdventureType | null> {
+    const result = await Api.put("/adventure/levelUp", data);
+    return result.data;
   }
 }

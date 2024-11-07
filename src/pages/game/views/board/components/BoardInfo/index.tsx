@@ -1,63 +1,16 @@
-import { Icon } from "@iconify/react";
 import * as S from "./styles";
 import { useContext } from "react";
-import ChatContext from "../../../../../../shared/context/ChatContext";
-import {
-  Boardenum,
-  PromptEnum,
-} from "../../../../../../@types/constants.types";
-import { TalkStore } from "../../../../../../shared/store/talk.store";
 import AdventureContext from "../../../../../../shared/context/AdventureContext";
-import LoadingContext from "../../../../../../shared/context/LoadingContext";
-import { BoardStore } from "../../../../../../shared/store/board.Store";
+import { BattleEnum } from "../../../../../../@types/constants.types";
+import Wrapper from "../../../../../../shared/components/Wrapper";
+import { BonusDetail } from "../../../../../../shared/components/BonusDetail";
 
 type Props = {
   playerInfo: any;
 };
 
 export default function BoardInfo(props: Props) {
-  const [adventure, setAdventure] = useContext(AdventureContext);
-  const [, setLoading] = useContext(LoadingContext);
-  const [chat, setChat] = useContext(ChatContext);
-
-  const onTalkSelect = () => {
-    setChat({
-      ident: props.playerInfo?.ident,
-      name: props.playerInfo?.name,
-      type: props.playerInfo?.token?.type,
-    });
-  };
-
-  const onCheckPhysicalState = () => {
-    setLoading(true);
-    new TalkStore()
-      .sendMessag(adventure?.id!, {
-        target: props.playerInfo.ident,
-        text: "",
-        type: PromptEnum.PhysicalState,
-      })
-      .then((e) => {
-        if (!!e) setAdventure(e);
-      })
-      .finally(() => {
-        setLoading(false);
-      });
-  };
-
-  const onChangeLocation = () => {
-    setLoading(true);
-    new BoardStore()
-      .changeLocation(adventure?.id!, props.playerInfo.ident)
-      .then((e) => {
-        if (!!e) setAdventure(e);
-      })
-      .finally(() => {
-        setLoading(false);
-      });
-  };
-
-  const isMyChar = (): boolean =>
-    props.playerInfo.ident === adventure?.character?.ident;
+  const [adventure] = useContext(AdventureContext);
 
   const getX = () =>
     props.playerInfo.positionX < 0 ? 0 : props.playerInfo.positionX;
@@ -65,8 +18,12 @@ export default function BoardInfo(props: Props) {
   const getY = () =>
     props.playerInfo.positionY < 0 ? 0 : props.playerInfo.positionY;
 
+  const calcLife = () => {
+    return (props.playerInfo.currentLife * 100) / props.playerInfo.totalLife;
+  };
+
   if (
-    adventure?.location?.battle?.running &&
+    adventure?.battle?.status === BattleEnum.InProgress &&
     props.playerInfo.token &&
     props.playerInfo.token.type
   ) {
@@ -75,80 +32,31 @@ export default function BoardInfo(props: Props) {
         id="peronInfoItem"
         positionX={getX()}
         positionY={getY()}
-        selected={props.playerInfo?.ident === chat?.ident}
+        lifePerc={calcLife()}
       >
         <div className="item">
           <span>Nome:</span> {props.playerInfo.name}
         </div>
         <hr />
-        <div className="contentBtn">
-          {!isMyChar() ? (
-            <div title="Estado fisico" onClick={onCheckPhysicalState}>
-              <Icon icon="game-icons:strong" />
+        <Wrapper
+          width="100%"
+          alignItems="center"
+          justifyContent="center"
+          margin="10px 0"
+        >
+          <div className="lifeContent">
+            <div className="life">
+              <div className="text">
+                {props.playerInfo.currentLife}/{props.playerInfo.totalLife}
+              </div>
             </div>
-          ) : (
-            <div />
-          )}
-        </div>
-      </S.PeronInfo>
-    );
-  }
-
-  if (props.playerInfo.boardType === Boardenum.Travel) {
-    console.log("test");
-    return (
-      <S.PeronInfo
-        id="peronInfoItem"
-        positionX={getX()}
-        positionY={getY()}
-        selected={props.playerInfo?.ident === chat?.ident}
-      >
-        <div className="item">
-          <span>Nome:</span> {props.playerInfo.name}
-        </div>
-        <hr />
-        <div className="contentBtn">
-          <div
-            title={`Viajar para ${props.playerInfo.name}`}
-            onClick={onChangeLocation}
-          >
-            <Icon icon="tabler:location" />
           </div>
-        </div>
+        </Wrapper>
+
+        <BonusDetail effects={props.playerInfo.effects ?? []} />
       </S.PeronInfo>
     );
   }
 
-  return props.playerInfo.show ? (
-    <S.PeronInfo
-      id="peronInfoItem"
-      positionX={getX()}
-      positionY={getY()}
-      selected={props.playerInfo?.ident === chat?.ident}
-    >
-      <div className="item">
-        <span>Nome:</span> {props.playerInfo.name}
-      </div>
-      <div className="item">
-        <span>Função:</span> {props.playerInfo.function}
-      </div>
-      <div className="item">
-        <span>Raça:</span> {props.playerInfo.race}
-      </div>
-      <div className="item">
-        <span>Estado:</span> {props.playerInfo.state}
-      </div>
-      <hr />
-      <div className="contentBtn">
-        <div title="Conversar" onClick={onTalkSelect}>
-          <Icon icon="ic:round-message" />
-        </div>
-        <div title="Atacar">
-          <Icon icon="material-symbols-light:swords" />
-        </div>
-      </div>
-    </S.PeronInfo>
-  ) : (
-    <></>
-  );
+  return <></>;
 }

@@ -3,19 +3,18 @@ import styled from "styled-components";
 type PeronInfoProps = {
   positionX: number;
   positionY: number;
-  selected: boolean;
+  lifePerc: number;
 };
 export const PeronInfo = styled.div<PeronInfoProps>`
   position: absolute;
   top: ${(props) => props.positionY + "px"};
   left: ${(props) => props.positionX + "px"};
   width: 250px;
-  background-color: black;
   border: 3px ridge #b78846;
   border-radius: 10px 10px 0 10px;
   box-shadow: 3px 3px 3px rgba(0, 0, 0, 0.5);
   transition: 0.3s;
-  background: #e2dfd4;
+  background: rgba(0, 0, 0, 0.85);
   padding-top: 5px;
 
   &:hover {
@@ -25,7 +24,7 @@ export const PeronInfo = styled.div<PeronInfoProps>`
 
   .item {
     font-family: Verdana, Geneva, Tahoma, sans-serif;
-    color: black;
+    color: white;
     font-size: 12px;
     text-align: start;
     margin-left: 7px;
@@ -52,12 +51,6 @@ export const PeronInfo = styled.div<PeronInfoProps>`
       justify-content: center;
       cursor: pointer;
 
-      &:nth-child(1) {
-        color: #4f3933;
-        filter: ${(props) =>
-          props.selected ? "drop-shadow(3px 3px 2px #b78846)" : "none"};
-      }
-
       &:nth-child(2) {
         color: #dc3545;
       }
@@ -66,5 +59,24 @@ export const PeronInfo = styled.div<PeronInfoProps>`
         filter: drop-shadow(2px 2px 2px #b78846);
       }
     }
+  }
+
+  .lifeContent {
+    width: 80%;
+    height: 15px;
+    background-color: rgba(0, 0, 0, 0.5);
+    border-radius: 6px;
+  }
+
+  .text {
+    font-family: Verdana, Geneva, Tahoma, sans-serif;
+    font-size: 12px;
+  }
+
+  .life {
+    width: ${(props) => props.lifePerc ?? 100}%;
+    height: 15px;
+    background-color: red;
+    border-radius: 6px;
   }
 `;

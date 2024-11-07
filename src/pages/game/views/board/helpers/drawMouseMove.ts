@@ -9,9 +9,10 @@ export const DrawMouseMove = (
   boardConfig: BoardConfigType,
   adventure: AdventureType
 ) => {
-  if (!event) return;
+  const character = adventure?.characters?.find((c) => c.selected);
+  if (!event || !character) return;
 
-  const skill = adventure.character?.skills?.find((x) => x.selected);
+  const skill = character.skills?.find((x) => x.selected);
   if (!skill) return;
 
   const context = boardConfig.context;

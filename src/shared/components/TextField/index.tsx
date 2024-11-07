@@ -6,6 +6,7 @@ type Props = {
   placeholder?: string;
   minLength?: number;
   maxLength?: number;
+  type?: string;
 };
 
 export const TextField = (props: Props) => {
@@ -24,7 +25,7 @@ export const TextField = (props: Props) => {
   return (
     <S.Content>
       <S.Input
-        type="text"
+        type={props.type ?? "text"}
         placeholder={props.placeholder}
         value={props.value ?? ""}
         onChange={(e) => onChange(e.target.value)}

@@ -1,22 +1,14 @@
 import {
   AdventureType,
-  BoardRequestType,
-  CharacterMoveRequestType,
+  CharacterActionRequestType,
 } from "../../@types/app.types";
 import { Api } from "./base";
 
 export class BoardStore {
-  async sendPosition(
-    data: BoardRequestType
+  async characterAction(
+    data: CharacterActionRequestType
   ): Promise<AdventureType | undefined> {
-    const result = await Api.post(`/board`, data);
-    return result.data;
-  }
-
-  async characterMove(
-    data: CharacterMoveRequestType
-  ): Promise<AdventureType | undefined> {
-    const result = await Api.post(`/board/move`, data);
+    const result = await Api.post(`/board/action`, data);
     return result.data;
   }
 
@@ -24,16 +16,6 @@ export class BoardStore {
     adventureId: string
   ): Promise<AdventureType | undefined> {
     const result = await Api.post(`/board/endTurn?adventureId=${adventureId}`);
-    return result.data;
-  }
-
-  async changeLocation(
-    adventureId: string,
-    locationId: string
-  ): Promise<AdventureType | undefined> {
-    const result = await Api.post(
-      `/board/changeLocation?adventureId=${adventureId}&locationId=${locationId}`
-    );
     return result.data;
   }
 }

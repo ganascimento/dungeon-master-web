@@ -1,53 +1,54 @@
 import {
   AdventureLogEnum,
+  BattleEnum,
+  EffectEnum,
   CharacterTypeEnum,
-  LocationEnum,
-  MissionEnum,
   MoveEnum,
-  PromptEnum,
   SkillEnum,
 } from "./constants.types";
 
 export type AdventureType = {
   id?: string;
   name?: string;
-  description?: string;
-  plot?: string;
   started?: boolean;
-  character?: CharacterType;
+  characters?: CharacterType[];
   allies?: CharacterType[];
   adventureLogs?: AdventureLogType[];
   location?: LocationType;
-  missions?: MissionType[];
-  locations?: LocationMinType[];
+  battle?: BattleType;
+  difficultyLevel?: number;
 };
 
 export type RaceType = {
   id: string;
   name: string;
-  description: string;
   type: number;
   icon: string;
+  strength: number;
+  dexterity: number;
+  constitution: number;
+  intelligence: number;
 };
 
 export type ClassType = {
   id: string;
   name: string;
-  description: string;
   type: number;
   icon: string;
+  strength: number;
+  dexterity: number;
+  constitution: number;
+  intelligence: number;
 };
 
 export type CharacterType = {
-  ident?: string;
+  id?: string;
   name?: string;
   description?: string;
   strength?: number;
   dexterity?: number;
   constitution?: number;
   intelligence?: number;
-  wisdom?: number;
-  charisma?: number;
   race?: RaceType;
   class?: ClassType;
   token?: TokenType;
@@ -57,6 +58,12 @@ export type CharacterType = {
   currentLife?: number;
   totalStamina?: number;
   currentStamina?: number;
+  selected?: boolean;
+  exp?: number;
+  allowUp?: boolean;
+  nextUpExp?: number;
+  level?: number;
+  effects?: EffectType[];
 };
 
 export type TokenType = {
@@ -88,41 +95,15 @@ export type AdventureLogType = {
   color: string;
 };
 
-export type NpcType = {
-  name: string;
-  function: string;
-  state: string;
-  token?: TokenType;
-};
-
 export type LocationType = {
   ident: string;
-  name: string;
-  isCurrent: boolean;
-  type: LocationEnum;
   map: MapType;
-  npcs?: NpcType[];
-  traps?: TrapType[];
-  enemyTraps?: PositionType[];
+  traps?: PositionType[];
   allys?: PositionType[];
-  endPosition?: PositionType;
-  battle?: BattleType;
 };
 
 export type MapType = {
   fileName: string;
-};
-
-export type ChatType = {
-  ident?: string;
-  type?: CharacterTypeEnum;
-  name?: string;
-};
-
-export type TalkRequestType = {
-  text: string;
-  type: PromptEnum;
-  target: string;
 };
 
 export type PositionType = {
@@ -146,12 +127,8 @@ export type SkillType = {
   typeString: string;
   selected?: boolean;
   duration?: boolean;
-};
-
-export type TrapType = {
-  activeted: boolean;
-  ident: string;
-  position: PositionType;
+  allowClasses?: number[];
+  selectedPositions?: PositionType[];
 };
 
 export type BoarImageType = {
@@ -159,40 +136,62 @@ export type BoarImageType = {
   name: string;
 };
 
-export type BoardRequestType = {
-  adventureId: string;
-  position: PositionType;
-};
-
 export type BattleType = {
-  running: boolean;
+  status: BattleEnum;
   enemies: CharacterType[];
   turnOrder: TurnOrderType[];
 };
 
 export type TurnOrderType = {
   active: boolean;
-  ident: string;
+  characterIdent: string;
 };
 
-export type CharacterMoveRequestType = {
+export type CharacterActionRequestType = {
   adventureId: string;
   positions: PositionType[];
   type: MoveEnum;
   skillId?: string;
 };
 
-export type MissionType = {
-  ident: string;
-  description: string;
-  type: MissionEnum;
-  completed: boolean;
-  items: MissionType[];
+export type CreateAdventureType = {
+  name?: string;
+  difficultyLevel?: number;
+  characterIds?: string[];
 };
 
-export type LocationMinType = {
-  ident: string;
-  name: string;
-  type: LocationEnum;
-  mapPosition: PositionType;
+export type LoginType = {
+  email?: string;
+  password?: string;
+};
+
+export type CreateUserType = {
+  name?: string;
+  email?: string;
+  password?: string;
+  sex?: number;
+  language?: string;
+};
+
+export type AuthTokenType = {
+  authenticated?: boolean;
+  accessToken?: string;
+};
+
+export type SaveAdventureCharacterType = {
+  id: string;
+  adventureId: string;
+  strength: number;
+  dexterity: number;
+  constitution: number;
+  intelligence: number;
+  skillsIds: string[];
+};
+
+export type EffectType = {
+  type: EffectEnum;
+  turns: number;
+  value?: number;
+  roll?: string;
+  active: boolean;
 };
