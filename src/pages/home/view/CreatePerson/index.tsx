@@ -1,3 +1,4 @@
+/* eslint-disable react-hooks/exhaustive-deps */
 import { useNavigate } from "react-router-dom";
 import { useContext, useEffect, useState } from "react";
 import { Modal } from "../../../../shared/components/Modal";

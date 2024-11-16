@@ -53,6 +53,7 @@ export const Ability = styled.div`
     }
 
     .bonus {
+      width: 15px;
       font-size: 15px;
     }
 

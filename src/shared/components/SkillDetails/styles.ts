@@ -42,7 +42,6 @@ export const Content = styled.div<ContentProps>`
 type ItemProps = {
   color?: string;
   selected: boolean;
-  iconPosition: "normal" | "left";
 };
 export const Item = styled.div<ItemProps>`
   cursor: pointer;
@@ -63,7 +62,7 @@ export const Item = styled.div<ItemProps>`
 
   .popup {
     visibility: hidden;
-    width: 250px;
+    width: 270px;
     background: linear-gradient(to bottom, #181619, #30231e);
     border-radius: 10% / 8%;
     border: 2px ridge #b78846;
@@ -71,9 +70,8 @@ export const Item = styled.div<ItemProps>`
     position: absolute;
     z-index: 1;
     bottom: 105%;
-    left: ${(props) => (props.iconPosition === "normal" ? "50%" : "100%")};
-    margin-left: ${(props) =>
-      props.iconPosition === "normal" ? "-80px" : "-40px"};
+    left: 100%;
+    margin-left: -40px;
     display: flex;
     align-items: start;
     justify-content: start;
@@ -91,27 +89,21 @@ export const Item = styled.div<ItemProps>`
     .type {
       font-size: 12px;
       color: rgba(255, 255, 255, 0.6);
-      margin-bottom: 12px;
-    }
-    .desc {
-      font-size: 12px;
-      color: rgba(255, 255, 255, 0.6);
-      margin-bottom: 12px;
-      color: #ddd;
-      text-align: start;
+      margin-bottom: 8px;
     }
     .damage {
-      font-size: 21px;
-      margin-bottom: 12px;
+      font-size: 19px;
+      margin-bottom: 8px;
     }
     .dice {
       display: flex;
       align-items: center;
       gap: 10px;
-      margin-bottom: 15px;
+      margin-bottom: 10px;
 
       svg {
         font-size: 35px;
+        color: ${(props) => props.color}95;
       }
       span {
         font-size: 16px;
@@ -155,4 +147,14 @@ export const PropsContent = styled.div`
       color: #aaa;
     }
   }
+`;
+
+type EffectDescriptionProps = {
+  color?: string;
+};
+export const EffectDescription = styled.div<EffectDescriptionProps>`
+  font-size: 12px;
+  margin-bottom: 12px;
+  color: ${(props) => props.color}99;
+  text-align: start;
 `;

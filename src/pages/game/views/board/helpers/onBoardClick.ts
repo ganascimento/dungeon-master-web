@@ -8,9 +8,12 @@ import {
 import {
   BattleEnum,
   CharacterTypeEnum,
+  EffectEnum,
   MoveEnum,
 } from "../../../../../@types/constants.types";
 import { BoardStore } from "../../../../../shared/store/board.Store";
+import { GetSelectedChar } from "../../../../../shared/ultils/characterGets";
+import { CheckValidCast } from "./checkIsValidCast";
 import { GetMatrixFromPosition } from "./getSizes";
 
 type ClickActionType = {
@@ -89,7 +92,7 @@ const BattleClick = ({
   elementInPosition,
   setLoadingCtx,
 }: ClickActionType): boolean => {
-  const character = adventure?.characters?.find((c) => c.selected);
+  const character = GetSelectedChar(adventure);
   const activeTurnIdent = adventure?.battle?.turnOrder?.find(
     (turnOrder) => turnOrder.active
   );
@@ -120,35 +123,33 @@ const BattleClick = ({
 
       if (
         ((!elementInPosition || elementInPosition?.token?.death) &&
-          skill.area === 0) ||
-        !checkValidCast(skill, character.token?.matrix!, positions)
+          skill.area === 0 &&
+          skill.effect?.type !== EffectEnum.Move) ||
+        !CheckValidCast(skill, character.token?.matrix!, positions)
       )
         return true;
 
       if (skill.target > 1) {
         if (!skill.selectedPositions) skill.selectedPositions = [];
         skill.selectedPositions.push(positions[0]);
-      }
 
-      if (
-        skill.target > 1 &&
-        skill.target !== skill.selectedPositions?.length
-      ) {
-        setAdventure({
-          ...adventure,
-          characters: [...(adventure.characters ?? [])].map((char) => {
-            if (char.selected) {
-              char.skills = char.skills?.map((s) => {
-                if (s.id === skill.id)
-                  s.selectedPositions = skill.selectedPositions;
-                return s;
-              });
-            }
-            return char;
-          }),
-        });
+        if (skill.target !== skill.selectedPositions?.length) {
+          setAdventure({
+            ...adventure,
+            characters: [...(adventure.characters ?? [])].map((char) => {
+              if (char.selected) {
+                char.skills = char.skills?.map((s) => {
+                  if (s.id === skill.id)
+                    s.selectedPositions = skill.selectedPositions;
+                  return s;
+                });
+              }
+              return char;
+            }),
+          });
 
-        return true;
+          return true;
+        }
       }
 
       OnCastSkill(adventure, setAdventure, setLoadingCtx, positions, skill);
@@ -188,10 +189,15 @@ const GetElementInPosition = (
 
   if (!!element) return element;
 
-  adventure?.battle?.enemies?.forEach((enemy) => {
-    if (enemy.token?.matrix.x === matrixX && enemy.token?.matrix.y === matrixY)
-      element = enemy;
-  });
+  adventure?.characters
+    ?.filter((character) => character.type === CharacterTypeEnum.Enemy)
+    ?.forEach((enemy) => {
+      if (
+        enemy.token?.matrix.x === matrixX &&
+        enemy.token?.matrix.y === matrixY
+      )
+        element = enemy;
+    });
 
   return element;
 };
@@ -203,7 +209,9 @@ const MoveStrict = (
   adventure: AdventureType,
   setAdventure: (value: AdventureType) => void,
   setLoadingCtx: (value: boolean) => void
-) => {
+): TokenType => {
+  if (!token.current) return token;
+
   const diffX = Math.abs(matrixX - token.matrix.x);
   const diffY = Math.abs(matrixY - token.matrix.y);
 
@@ -278,24 +286,4 @@ const OnCastSkill = (
     .finally(() => {
       setLoadingCtx(false);
     });
-};
-
-const checkValidCast = (
-  skill: SkillType,
-  currentPosition: PositionType,
-  targetPositions: PositionType[]
-): boolean => {
-  let isValidCast = true;
-
-  for (var position of targetPositions) {
-    isValidCast =
-      position.x <= currentPosition.x + skill.range &&
-      position.x >= currentPosition.x - skill.range &&
-      position.y <= currentPosition.y + skill.range &&
-      position.y >= currentPosition.y - skill.range;
-
-    if (!isValidCast) break;
-  }
-
-  return isValidCast;
 };

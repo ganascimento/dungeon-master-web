@@ -1,19 +1,24 @@
 import { Icon } from "@iconify/react";
 import { CharacterType, SkillType } from "../../../@types/app.types";
 import * as S from "./styles";
-import { SkillEnum } from "../../../@types/constants.types";
+import { EffectEnum, SkillEnum } from "../../../@types/constants.types";
 import {
   CalcProblabyRoll,
   GetBonusFromSkill,
   RenderBonusString,
 } from "../../ultils/damageUltils";
+import {
+  CalcAttributeBonus,
+  CalcTotalPoints,
+} from "../../ultils/calcAttributeBonus";
+import { BonusDetail } from "../BonusDetail";
+import Wrapper from "../Wrapper";
 
 type Props = {
   skill: SkillType;
   character: CharacterType;
   setCharacter?: (value: CharacterType) => void;
   canSelect?: boolean;
-  iconPosition?: "normal" | "left";
   isSelected?: boolean;
   disable?: boolean;
 };
@@ -72,20 +77,36 @@ export const SkillDetails = (props: Props) => {
     props.setCharacter!({ ...props.character, skills });
   };
 
+  const calcSkillMageResistence = (skill: SkillType) => {
+    const bonus = CalcAttributeBonus(
+      props.character.intelligence +
+        CalcTotalPoints(props.character!, "intelligence")
+    );
+
+    const effectBonus =
+      props.character.effects
+        ?.filter((effect) => effect.type === EffectEnum.AttackRoll)
+        .map((effect) => effect.value ?? 0)
+        .reduce((acc, current) => acc + current, 0) ?? 0;
+
+    return 10 + bonus + (props.character.level ?? 1) + effectBonus;
+  };
+
   return (
     <S.Content selected={props.skill.selected ?? false}>
       <S.Item
         selected={activeSelectedSkill()}
         color={getColor()}
         onClick={props.setCharacter ? handleClick : undefined}
-        iconPosition={props.iconPosition ?? "normal"}
       >
         <Icon icon={props.skill.icon} />
         <div className="popup">
           <div className="name">{props.skill.name}</div>
           <div className="type">{props.skill.typeString}</div>
           {props.skill.description ? (
-            <div className="desc">{props.skill.description}</div>
+            <S.EffectDescription color={getColor()}>
+              {props.skill.description}
+            </S.EffectDescription>
           ) : (
             <></>
           )}
@@ -136,15 +157,24 @@ export const SkillDetails = (props: Props) => {
             ) : (
               <></>
             )}
-            {props.skill.duration ? (
+            {props.skill.type === SkillEnum.Mage &&
+            (!props.skill.effect || (props.skill.effect?.value ?? 0) < 0) ? (
               <div className="props">
-                <Icon icon="icon-park-outline:application-effect" />{" "}
-                {props.skill.duration}
+                <Icon icon="material-symbols:shield" />{" "}
+                {calcSkillMageResistence(props.skill)}
               </div>
             ) : (
               <></>
             )}
           </S.PropsContent>
+          <Wrapper margin="12px 0 0 0">
+            {!!props.skill?.effect &&
+            props.skill?.effect.type !== EffectEnum.Move ? (
+              <BonusDetail effects={[props.skill?.effect]} />
+            ) : (
+              <></>
+            )}
+          </Wrapper>
         </div>
       </S.Item>
       {props.isSelected && props.skill.currentTurn !== 0 ? (

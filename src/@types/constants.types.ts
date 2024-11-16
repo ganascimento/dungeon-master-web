@@ -44,4 +44,13 @@ export enum EffectEnum {
   ArmorClass = 3,
   Stamina = 4,
   Bleeding = 5,
+  Move = 7,
+}
+
+export enum ClassEnum {
+  Priest = 1,
+  Warrior = 2,
+  Mage = 3,
+  Archer = 4,
+  Warlock = 5,
 }

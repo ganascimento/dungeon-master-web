@@ -71,6 +71,8 @@ export const PeronInfo = styled.div<PeronInfoProps>`
   .text {
     font-family: Verdana, Geneva, Tahoma, sans-serif;
     font-size: 12px;
+    position: absolute;
+    left: 45%;
   }
 
   .life {

@@ -16,6 +16,7 @@ import AdventureContext from "../../shared/context/AdventureContext";
 import { ROUTER_PATHS } from "../../shared/router/router.path";
 import { AdventureStore } from "../../shared/store/adventure.store";
 import { toast } from "react-toastify";
+import { GetSelectedChar } from "../../shared/ultils/characterGets";
 
 type CharCreationType = {
   icon: ReactNode;
@@ -54,19 +55,24 @@ export default function CharUpLevelPage() {
       navigate(ROUTER_PATHS.Home);
       return;
     }
-    setCharacter(adventure?.characters?.find((c) => c.selected));
+    setCharacter(GetSelectedChar(adventure));
   }, []);
 
   const skillStore = new SkillStore();
 
   useEffect(() => {
     findSkills();
-  }, []);
+    console.log(character);
+  }, [character]);
 
   const findSkills = async () => {
+    if (!character?.class?.type) return;
     setLoading(true);
     try {
-      const result = await skillStore.getAll();
+      const result = await skillStore.getByLevelAndClassAsync(
+        (character?.level ?? 0) + 1,
+        character?.class?.type
+      );
       setSkills(result);
     } finally {
       setLoading(false);
@@ -100,9 +106,7 @@ export default function CharUpLevelPage() {
   const handleSaveChar = async () => {
     setLoading(true);
     try {
-      const selectedCharId = adventure?.characters?.find(
-        (char) => char.selected
-      )?.id;
+      const selectedCharId = GetSelectedChar(adventure)?.id;
       const result = await adventureStore.characterLevelUp({
         adventureId: adventure?.id!,
         skillsIds: addSkills?.map((skill) => skill.id) ?? [],

@@ -1,5 +1,8 @@
 import { BoardConfigType, TokenType } from "../../../../../@types/app.types";
-import { CharacterTypeEnum } from "../../../../../@types/constants.types";
+import {
+  CharacterTypeEnum,
+  ClassEnum,
+} from "../../../../../@types/constants.types";
 import { GetPositionFromMatrix } from "./getSizes";
 
 const myCharIdentColor = "yellow";
@@ -14,7 +17,8 @@ export const DrawTokens = (
       (token.moveState === 1 || !token.allowGo) &&
       token.moveIntend &&
       (token.matrix.x !== token.moveIntend.x ||
-        token.matrix.y !== token.moveIntend.y)
+        token.matrix.y !== token.moveIntend.y) &&
+      token.current
     ) {
       drawClickPoint(boardConfig.context, token, boardConfig);
     }
@@ -29,7 +33,28 @@ const drawToken = (
   boardConfig: BoardConfigType
 ) => {
   const skull = boardConfig.images.find((x) => x.name === "skull");
-  if (!skull) return;
+  const warrior = boardConfig.images.find((x) => x.name === "warrior");
+  const archer = boardConfig.images.find((x) => x.name === "archer");
+  const priest = boardConfig.images.find((x) => x.name === "priest");
+  const mage = boardConfig.images.find((x) => x.name === "mage");
+  const warlock = boardConfig.images.find((x) => x.name === "warlock");
+
+  if (!skull || !warrior || !archer || !priest || !mage || !warlock) return;
+
+  const getImageByClass = (type: ClassEnum) => {
+    switch (type) {
+      case ClassEnum.Archer:
+        return archer.img;
+      case ClassEnum.Mage:
+        return mage.img;
+      case ClassEnum.Priest:
+        return priest.img;
+      case ClassEnum.Warlock:
+        return warlock.img;
+      case ClassEnum.Warrior:
+        return warrior.img;
+    }
+  };
 
   const [positionX, positionY] = GetPositionFromMatrix(
     boardConfig,
@@ -48,6 +73,13 @@ const drawToken = (
     context.lineWidth = 2;
     context.strokeStyle = "#000";
     context.stroke();
+    boardConfig.context.drawImage(
+      getImageByClass(token.classType!),
+      positionX - 12,
+      positionY - 13,
+      25,
+      25
+    );
   }
   if (token.death) {
     boardConfig.context.drawImage(
@@ -81,7 +113,7 @@ const drawClickPoint = (
   );
 
   context.beginPath();
-  if (token.allowGo) context.fillStyle = "rgba(0,255,0,.8)";
-  else context.fillStyle = "rgba(255,0,0,.4)";
+  if (token.allowGo) context.fillStyle = "rgba(0,255,0,.5)";
+  else context.fillStyle = "rgba(255,0,0,.5)";
   context.fillRect(positionX, positionY, boardConfig.size, boardConfig.size);
 };

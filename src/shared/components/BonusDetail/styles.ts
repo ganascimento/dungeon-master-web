@@ -3,7 +3,6 @@ import styled from "styled-components";
 export const BonusContent = styled.div`
   display: flex;
   width: 100%;
-  padding: 10px;
   gap: 15px;
   flex-wrap: wrap;
 `;
@@ -46,6 +45,10 @@ export const Bonus = styled.div<BonusProps>`
       align-items: center;
       justify-content: center;
       gap: 2px;
+
+      svg {
+        font-size: 13px;
+      }
     }
 
     .iconTurn {

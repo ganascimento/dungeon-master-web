@@ -249,6 +249,7 @@ export const MinAvatar = styled.div<AvatarProps>`
   box-shadow: 4px 4px 3px rgba(0, 0, 0, 0.4);
   cursor: pointer;
   transition: 0.3s;
+  position: relative;
 
   .sub {
     height: 45px;
@@ -262,9 +263,36 @@ export const MinAvatar = styled.div<AvatarProps>`
     background: #181619;
   }
 
+  .popup {
+    position: absolute;
+    opacity: 0;
+    visibility: hidden;
+    width: 250px;
+    background: linear-gradient(to bottom, #181619, #30231e);
+    border-radius: 10% / 8%;
+    border: 2px ridge #b78846;
+    padding: 8px 10px;
+    z-index: 1;
+    top: -25%;
+    left: 115%;
+    display: flex;
+    align-items: start;
+    justify-content: start;
+    flex-direction: column;
+    color: #fff;
+    box-shadow: 6px 6px 4px rgba(0, 0, 0, 0.4);
+    transition: 0.3s;
+  }
+
   &:hover {
     box-shadow: 2px 2px 3px rgba(0, 0, 0, 0.4);
     transition: 0.3s;
+
+    .popup {
+      visibility: visible;
+      opacity: 1;
+      transition: 0.3s;
+    }
   }
 
   &:active {

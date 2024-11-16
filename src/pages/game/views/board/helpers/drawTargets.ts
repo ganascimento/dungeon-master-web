@@ -2,13 +2,14 @@ import {
   AdventureType,
   BoardConfigType,
 } from "../../../../../@types/app.types";
+import { GetSelectedChar } from "../../../../../shared/ultils/characterGets";
 import { GetPositionFromMatrix } from "./getSizes";
 
 export const DrawTargets = (
   boardConfig: BoardConfigType,
   adventure: AdventureType
 ) => {
-  const character = adventure?.characters?.find((c) => c.selected);
+  const character = GetSelectedChar(adventure);
   if (!character) return;
 
   const skill = character.skills?.find((x) => x.selected);

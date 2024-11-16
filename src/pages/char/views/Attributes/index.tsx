@@ -10,7 +10,7 @@ import { CalcAttributeBonus } from "../../../../shared/ultils/calcAttributeBonus
 import { RenderBonusString } from "../../../../shared/ultils/damageUltils";
 import Wrapper from "../../../../shared/components/Wrapper";
 
-type AbilityType = {
+export type AbilityType = {
   field?: string;
   icon?: ReactNode;
   text?: string;

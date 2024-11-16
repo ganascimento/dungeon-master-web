@@ -19,6 +19,7 @@ export default function BoardInfo(props: Props) {
     props.playerInfo.positionY < 0 ? 0 : props.playerInfo.positionY;
 
   const calcLife = () => {
+    if (props.playerInfo.currentLife < 1) return 0;
     return (props.playerInfo.currentLife * 100) / props.playerInfo.totalLife;
   };
 
@@ -45,15 +46,16 @@ export default function BoardInfo(props: Props) {
           margin="10px 0"
         >
           <div className="lifeContent">
-            <div className="life">
-              <div className="text">
-                {props.playerInfo.currentLife}/{props.playerInfo.totalLife}
-              </div>
+            <div className="text">
+              {props.playerInfo.currentLife}/{props.playerInfo.totalLife}
             </div>
+            <div className="life"></div>
           </div>
         </Wrapper>
 
-        <BonusDetail effects={props.playerInfo.effects ?? []} />
+        <Wrapper margin="15px 10px 10px 10px">
+          <BonusDetail effects={props.playerInfo.effects ?? []} />
+        </Wrapper>
       </S.PeronInfo>
     );
   }

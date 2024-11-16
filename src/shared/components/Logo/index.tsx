@@ -9,7 +9,7 @@ export const Logo = (props: Props) => {
     <S.Text fontSize={props.fontSize ?? "60px"}>
       Dungeon
       <br />
-      Master AI
+      Master
     </S.Text>
   );
 };

@@ -5,6 +5,7 @@ import {
   CharacterTypeEnum,
   MoveEnum,
   SkillEnum,
+  ClassEnum,
 } from "./constants.types";
 
 export type AdventureType = {
@@ -12,7 +13,6 @@ export type AdventureType = {
   name?: string;
   started?: boolean;
   characters?: CharacterType[];
-  allies?: CharacterType[];
   adventureLogs?: AdventureLogType[];
   location?: LocationType;
   battle?: BattleType;
@@ -76,6 +76,8 @@ export type TokenType = {
   type: CharacterTypeEnum;
   allowGo?: boolean;
   death?: boolean;
+  classType?: ClassEnum;
+  current?: boolean;
 };
 
 export type BoardConfigType = {
@@ -127,8 +129,8 @@ export type SkillType = {
   typeString: string;
   selected?: boolean;
   duration?: boolean;
-  allowClasses?: number[];
   selectedPositions?: PositionType[];
+  effect?: EffectType;
 };
 
 export type BoarImageType = {
@@ -138,7 +140,6 @@ export type BoarImageType = {
 
 export type BattleType = {
   status: BattleEnum;
-  enemies: CharacterType[];
   turnOrder: TurnOrderType[];
 };
 

@@ -4,7 +4,7 @@ import { Content } from "../../shared/components/Content";
 import * as S from "./styles";
 import { useNavigate } from "react-router-dom";
 import { ROUTER_PATHS } from "../../shared/router/router.path";
-import { AbilityList } from "../../shared/components/AbilityList";
+import { AbilityList } from "./components/AbilityList";
 import AdventureContext from "../../shared/context/AdventureContext";
 import { Icon } from "@iconify/react";
 import { SkillDetails } from "../../shared/components/SkillDetails";
@@ -12,6 +12,7 @@ import { CharacterType } from "../../@types/app.types";
 import { GameButton } from "../../shared/components/GameButton";
 import Wrapper from "../../shared/components/Wrapper";
 import { BattleEnum } from "../../@types/constants.types";
+import { GetMyChars, GetSelectedChar } from "../../shared/ultils/characterGets";
 
 export default function CharProfilePage() {
   const [adventure, setAdventure] = useContext(AdventureContext);
@@ -20,7 +21,7 @@ export default function CharProfilePage() {
   const navigate = useNavigate();
 
   useEffect(() => {
-    setCharacter(adventure?.characters?.find((c) => c.selected));
+    setCharacter(GetSelectedChar(adventure));
   }, [adventure]);
 
   useEffect(() => {
@@ -43,7 +44,8 @@ export default function CharProfilePage() {
       ...adventure,
       characters: [...(adventure?.characters ?? [])].map((char) => {
         char.selected = false;
-        if (char.allowUp && char.id !== character?.id) char.selected = true;
+        if (char.allowUp && char.id !== character?.id && !!char.token?.isMyChar)
+          char.selected = true;
         return char;
       }),
     });
@@ -76,7 +78,9 @@ export default function CharProfilePage() {
 
         {!adventure?.battle || adventure?.battle?.status === BattleEnum.Win ? (
           <>
-            {!!adventure?.characters?.find((char) => char.allowUp) ? (
+            {!!GetMyChars(adventure)?.find(
+              (char) => char.allowUp && char.id !== character.id
+            ) ? (
               <GameButton
                 onClick={handleNextPersonToUpLevel}
                 text="Próximo personagem"

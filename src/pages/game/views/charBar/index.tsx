@@ -13,6 +13,10 @@ import { useNavigate } from "react-router-dom";
 import { ROUTER_PATHS } from "../../../../shared/router/router.path";
 import Wrapper from "../../../../shared/components/Wrapper";
 import { BonusDetail } from "../../../../shared/components/BonusDetail";
+import {
+  GetMyChars,
+  GetSelectedChar,
+} from "../../../../shared/ultils/characterGets";
 
 export default function CharBarView() {
   const [loading, setLoading] = useContext(LoadingContext);
@@ -22,9 +26,8 @@ export default function CharBarView() {
   const navigate = useNavigate();
 
   useEffect(() => {
-    let mCharacter = adventure?.characters?.find(
-      (character) => character.selected
-    );
+    let mCharacter = GetSelectedChar(adventure);
+
     if (!mCharacter) {
       const activeTurnIdent = adventure?.battle?.turnOrder?.find(
         (turnOrder) => turnOrder.active
@@ -33,20 +36,28 @@ export default function CharBarView() {
       if (!!activeTurnIdent) {
         setAdventure({
           ...adventure,
-          characters: [...(adventure?.characters ?? [])].map((c) => {
-            c.selected = false;
-            if (c.id === activeTurnIdent?.characterIdent) c.selected = true;
-            return c;
+          characters: [...(adventure?.characters ?? [])].map((char) => {
+            char.selected = false;
+            if (
+              char.id === activeTurnIdent?.characterIdent &&
+              !!char.token?.isMyChar
+            )
+              char.selected = true;
+            return char;
           }),
         });
         return;
       } else {
+        let finded = false;
         setAdventure({
           ...adventure,
-          characters: [...(adventure?.characters ?? [])].map((c, idx) => {
-            c.selected = false;
-            if (idx === 0) c.selected = true;
-            return c;
+          characters: [...(adventure?.characters ?? [])].map((char) => {
+            char.selected = false;
+            if (!finded && !!char.token?.isMyChar) {
+              char.selected = true;
+              finded = true;
+            }
+            return char;
           }),
         });
       }
@@ -106,7 +117,7 @@ export default function CharBarView() {
       ...adventure,
       characters: [...(adventure?.characters ?? [])].map((c) => {
         c.selected = false;
-        if (c.id === char.id) c.selected = true;
+        if (c.id === char.id && !!c.token?.isMyChar) c.selected = true;
         return c;
       }),
     });
@@ -133,9 +144,19 @@ export default function CharBarView() {
         </S.EndTurnBtn>
       );
 
-    if (adventure?.battle?.status === BattleEnum.Finish)
+    if (
+      adventure?.battle?.status === BattleEnum.Finish ||
+      adventure?.battle?.status === BattleEnum.Lose
+    )
       return (
-        <S.ExitBtn onClick={getIsActiveCharacter() ? exitHandle : undefined}>
+        <S.ExitBtn
+          onClick={
+            getIsActiveCharacter() ||
+            adventure?.battle?.status === BattleEnum.Lose
+              ? exitHandle
+              : undefined
+          }
+        >
           Sair
         </S.ExitBtn>
       );
@@ -167,7 +188,7 @@ export default function CharBarView() {
         justifyContent="center"
         width="100%"
       >
-        {adventure?.characters
+        {GetMyChars(adventure)
           ?.filter((char) => char.id !== character?.id)
           ?.map((char) => (
             <S.MinAvatar
@@ -181,6 +202,14 @@ export default function CharBarView() {
                   <Icon icon={char?.class?.icon ?? ""} />
                 </S.ContentIcon>
               </div>
+
+              {!!char?.effects && char?.effects.length > 0 ? (
+                <div className="popup">
+                  <BonusDetail effects={char?.effects ?? []} />
+                </div>
+              ) : (
+                <></>
+              )}
             </S.MinAvatar>
           ))}
       </Wrapper>
@@ -225,14 +254,14 @@ export default function CharBarView() {
             setCharacter={(e) =>
               setAdventure({
                 ...adventure,
-                characters: [...(adventure?.characters ?? [])].map((c) => {
-                  if (c.id === character.id) return character;
-                  return c;
+                characters: [...(adventure?.characters ?? [])].map((char) => {
+                  if (char.id === character.id && !!char.token?.isMyChar)
+                    return character;
+                  return char;
                 }),
               })
             }
             key={index}
-            iconPosition="left"
             disable={
               !getIsActiveCharacter() ||
               (character?.currentStamina ?? 0) < skill.staminaCost ||

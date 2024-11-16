@@ -91,9 +91,12 @@ export default function CharPage() {
   useEffect(() => {
     findClasses();
     findRaces();
-    findSkills();
     getCharacter();
   }, []);
+
+  useEffect(() => {
+    findSkills();
+  }, [character.class]);
 
   const findClasses = async () => {
     setLoading(true);
@@ -116,9 +119,13 @@ export default function CharPage() {
   };
 
   const findSkills = async () => {
+    if (!character.class) return;
     setLoading(true);
     try {
-      const result = await skillStore.getAll();
+      const result = await skillStore.getByLevelAndClassAsync(
+        1,
+        character.class.type
+      );
       setSkills(result);
     } finally {
       setLoading(false);

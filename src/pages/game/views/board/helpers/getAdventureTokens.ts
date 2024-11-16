@@ -2,15 +2,17 @@ import { AdventureType, TokenType } from "../../../../../@types/app.types";
 
 export const GetAdventureTokens = (adventure: AdventureType): TokenType[] => {
   const tokens: TokenType[] = [];
-  adventure?.allies?.forEach((ally) => tokens.push(ally.token!));
-  adventure?.battle?.enemies?.forEach((enemy) =>
-    tokens.push({
-      ...enemy.token!,
-      death: (enemy.currentLife ?? 0) <= 0,
-    })
+  const activeTurnIdent = adventure?.battle?.turnOrder?.find(
+    (turnOrder) => turnOrder.active
   );
+
   adventure?.characters?.forEach((character) => {
-    tokens.push(character?.token!);
+    tokens.push({
+      ...character?.token!,
+      classType: character.class?.type,
+      death: (character.currentLife ?? 0) <= 0,
+      current: activeTurnIdent?.characterIdent === character.id,
+    });
   });
 
   return tokens;

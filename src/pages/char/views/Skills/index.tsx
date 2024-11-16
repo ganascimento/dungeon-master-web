@@ -18,43 +18,56 @@ export default function SkillView(props: Props) {
     setAmount(6 - (props.character.skills?.length ?? 0));
   }, [props.character]);
 
-  const melee = props.skills?.filter(
-    (x) =>
-      x.type === SkillEnum.Melee &&
-      x.allowClasses?.includes(props.character.class?.type!)
-  );
-  const range = props.skills?.filter(
-    (x) =>
-      x.type === SkillEnum.Range &&
-      x.allowClasses?.includes(props.character.class?.type!)
-  );
-  const health = props.skills?.filter(
-    (x) =>
-      x.type === SkillEnum.Health &&
-      x.allowClasses?.includes(props.character.class?.type!)
-  );
-  const mage = props.skills?.filter(
-    (x) =>
-      x.type === SkillEnum.Mage &&
-      x.allowClasses?.includes(props.character.class?.type!)
-  );
-  const passive = props.skills?.filter(
-    (x) =>
-      x.type === SkillEnum.Passive &&
-      x.allowClasses?.includes(props.character.class?.type!)
-  );
+  const melee = props.skills?.filter((x) => x.type === SkillEnum.Melee);
+  const range = props.skills?.filter((x) => x.type === SkillEnum.Range);
+  const health = props.skills?.filter((x) => x.type === SkillEnum.Health);
+  const mage = props.skills?.filter((x) => x.type === SkillEnum.Mage);
+  const passive = props.skills?.filter((x) => x.type === SkillEnum.Passive);
 
-  return (
-    <>
-      <S.Title>Selecione suas habilidades</S.Title>
+  const render = () => {
+    if (!props.character.race) {
+      return (
+        <Wrapper width="100%" margin="10px 0">
+          <S.Text>Escolha uma raça</S.Text>
+        </Wrapper>
+      );
+    }
+    if (!props.character.class) {
+      return (
+        <Wrapper width="100%" margin="10px 0">
+          <S.Text>Escolha uma classe</S.Text>
+        </Wrapper>
+      );
+    }
 
-      {!!props.character.class ? (
-        <>
-          {!!melee && melee.length > 0 ? (
-            <>
-              <S.SkillType>Corpo a corpo</S.SkillType>
-              <S.Content>
-                {melee?.map((skill, index) => (
+    return (
+      <>
+        {!!melee && melee.length > 0 ? (
+          <>
+            <S.SkillType>Corpo a corpo</S.SkillType>
+            <S.Content>
+              {melee?.map((skill, index) => (
+                <SkillDetails
+                  skill={skill}
+                  key={index}
+                  character={props.character}
+                  setCharacter={props.setCharacter}
+                  canSelect={amount !== 0}
+                />
+              ))}
+            </S.Content>
+          </>
+        ) : (
+          <></>
+        )}
+
+        {!!range && range.length > 0 ? (
+          <>
+            <S.SkillType>Distância</S.SkillType>
+            <S.Content>
+              {props.skills
+                ?.filter((x) => x.type === SkillEnum.Range)
+                ?.map((skill, index) => (
                   <SkillDetails
                     skill={skill}
                     key={index}
@@ -63,118 +76,84 @@ export default function SkillView(props: Props) {
                     canSelect={amount !== 0}
                   />
                 ))}
-              </S.Content>
-            </>
-          ) : (
-            <></>
-          )}
+            </S.Content>
+          </>
+        ) : (
+          <></>
+        )}
 
-          {!!range && range.length > 0 ? (
-            <>
-              <S.SkillType>Distância</S.SkillType>
-              <S.Content>
-                {props.skills
-                  ?.filter(
-                    (x) =>
-                      x.type === SkillEnum.Range &&
-                      x.allowClasses?.includes(props.character.class?.type!)
-                  )
-                  ?.map((skill, index) => (
-                    <SkillDetails
-                      skill={skill}
-                      key={index}
-                      character={props.character}
-                      setCharacter={props.setCharacter}
-                      canSelect={amount !== 0}
-                    />
-                  ))}
-              </S.Content>
-            </>
-          ) : (
-            <></>
-          )}
+        {!!health && health.length > 0 ? (
+          <>
+            <S.SkillType>Cura</S.SkillType>
+            <S.Content>
+              {props.skills
+                ?.filter((x) => x.type === SkillEnum.Health)
+                ?.map((skill, index) => (
+                  <SkillDetails
+                    skill={skill}
+                    key={index}
+                    character={props.character}
+                    setCharacter={props.setCharacter}
+                    canSelect={amount !== 0}
+                  />
+                ))}
+            </S.Content>
+          </>
+        ) : (
+          <></>
+        )}
 
-          {!!health && health.length > 0 ? (
-            <>
-              <S.SkillType>Cura</S.SkillType>
-              <S.Content>
-                {props.skills
-                  ?.filter(
-                    (x) =>
-                      x.type === SkillEnum.Health &&
-                      x.allowClasses?.includes(props.character.class?.type!)
-                  )
-                  ?.map((skill, index) => (
-                    <SkillDetails
-                      skill={skill}
-                      key={index}
-                      character={props.character}
-                      setCharacter={props.setCharacter}
-                      canSelect={amount !== 0}
-                    />
-                  ))}
-              </S.Content>
-            </>
-          ) : (
-            <></>
-          )}
+        {!!mage && mage.length > 0 ? (
+          <>
+            <S.SkillType>Magias</S.SkillType>
+            <S.Content>
+              {props.skills
+                ?.filter((x) => x.type === SkillEnum.Mage)
+                ?.map((skill, index) => (
+                  <SkillDetails
+                    skill={skill}
+                    key={index}
+                    character={props.character}
+                    setCharacter={props.setCharacter}
+                    canSelect={amount !== 0}
+                  />
+                ))}
+            </S.Content>
+          </>
+        ) : (
+          <></>
+        )}
 
-          {!!mage && mage.length > 0 ? (
-            <>
-              <S.SkillType>Magias</S.SkillType>
-              <S.Content>
-                {props.skills
-                  ?.filter(
-                    (x) =>
-                      x.type === SkillEnum.Mage &&
-                      x.allowClasses?.includes(props.character.class?.type!)
-                  )
-                  ?.map((skill, index) => (
-                    <SkillDetails
-                      skill={skill}
-                      key={index}
-                      character={props.character}
-                      setCharacter={props.setCharacter}
-                      canSelect={amount !== 0}
-                    />
-                  ))}
-              </S.Content>
-            </>
-          ) : (
-            <></>
-          )}
+        {!!passive && passive.length > 0 ? (
+          <>
+            <S.SkillType>Passivas</S.SkillType>
+            <S.Content>
+              {props.skills
+                ?.filter((x) => x.type === SkillEnum.Passive)
+                ?.map((skill, index) => (
+                  <SkillDetails
+                    skill={skill}
+                    key={index}
+                    character={props.character}
+                    setCharacter={props.setCharacter}
+                    canSelect={amount !== 0}
+                  />
+                ))}
+            </S.Content>
+          </>
+        ) : (
+          <></>
+        )}
+        <S.Text>Selecione {amount}</S.Text>
+      </>
+    );
+  };
 
-          {!!passive && passive.length > 0 ? (
-            <>
-              <S.SkillType>Passivas</S.SkillType>
-              <S.Content>
-                {props.skills
-                  ?.filter(
-                    (x) =>
-                      x.type === SkillEnum.Passive &&
-                      x.allowClasses?.includes(props.character.class?.type!)
-                  )
-                  ?.map((skill, index) => (
-                    <SkillDetails
-                      skill={skill}
-                      key={index}
-                      character={props.character}
-                      setCharacter={props.setCharacter}
-                      canSelect={amount !== 0}
-                    />
-                  ))}
-              </S.Content>
-            </>
-          ) : (
-            <></>
-          )}
-          <S.Text>Selecione {amount}</S.Text>
-        </>
-      ) : (
-        <Wrapper width="100%" margin="10px 0">
-          <S.Text>Escolha uma classe</S.Text>
-        </Wrapper>
-      )}
+  return (
+    <>
+      <S.Title>Selecione suas habilidades</S.Title>
+
+      {render()}
     </>
   );
 }

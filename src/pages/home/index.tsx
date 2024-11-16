@@ -12,11 +12,13 @@ import CreatePersonView from "./view/CreatePerson";
 import { logOff } from "../../shared/security/authentication";
 import { ROUTER_PATHS } from "../../shared/router/router.path";
 import { useNavigate } from "react-router-dom";
+import InformationView from "./view/Information";
 
 export default function HomePage() {
   const [isOpenCreateCampain, setIsOpenCreateCampain] = useState(false);
   const [isOpenSelectCampain, setIsOpenSelectCampain] = useState(false);
   const [isOpenCreatePerson, setIsOpenCreatePerson] = useState(false);
+  const [isOpenInfo, setIsOpenInfo] = useState(false);
   const [loading, setLoading] = useState(false);
   const [adventures, setAdventures] = useState<AdventureType[]>();
 
@@ -28,6 +30,8 @@ export default function HomePage() {
   const handleOpenSelectCampain = () => setIsOpenSelectCampain(true);
 
   const handleIsOpenCreatePerson = () => setIsOpenCreatePerson(true);
+
+  const handleIsOpenInfo = () => setIsOpenInfo(true);
 
   const handleExit = () => {
     logOff();
@@ -62,6 +66,7 @@ export default function HomePage() {
       <MenuButton text="Criar Campanha" onClick={handleOpenCreateCampain} />
       <MenuButton text="Personagens" onClick={handleIsOpenCreatePerson} />
       <MenuButton text="Configurações" onClick={() => {}} disabled />
+      <MenuButton text="Informações" onClick={handleIsOpenInfo} />
       <MenuButton text="Sair" onClick={handleExit} />
 
       <CreateAdventureView
@@ -78,6 +83,10 @@ export default function HomePage() {
         isOpen={isOpenCreatePerson}
         onClose={() => setIsOpenCreatePerson(false)}
         setAdventures={setAdventures}
+      />
+      <InformationView
+        isOpen={isOpenInfo}
+        onClose={() => setIsOpenInfo(false)}
       />
     </Content>
   );

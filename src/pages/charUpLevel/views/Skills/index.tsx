@@ -34,10 +34,7 @@ export default function SkillView(props: Props) {
   const getSkillByType = (type: SkillEnum) => {
     return (
       props.skills?.filter(
-        (x) =>
-          x.type === type &&
-          x.allowClasses?.includes(props.character.class?.type!) &&
-          !initialValues.map((y) => y.id).includes(x.id)
+        (x) => x.type === type && !initialValues.map((y) => y.id).includes(x.id)
       ) ?? []
     );
   };
