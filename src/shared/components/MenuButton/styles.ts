@@ -3,8 +3,8 @@ import styled from "styled-components";
 type ContentProps = {
   disabled?: boolean;
   width?: number;
-  marginBottom?: string;
-  active?: boolean;
+  $marginBottom?: string;
+  $active?: boolean;
 };
 
 export const Content = styled.div<ContentProps>`
@@ -18,7 +18,7 @@ export const Content = styled.div<ContentProps>`
   justify-content: center;
   border-bottom: 4px solid #302320;
   cursor: ${(props) => (props.disabled ? "not-allowed" : "pointer")};
-  margin-bottom: ${(props) => props.marginBottom ?? "22px"};
+  margin-bottom: ${(props) => props.$marginBottom ?? "22px"};
 `;
 
 export const SubContent = styled.div<ContentProps>`
@@ -28,7 +28,7 @@ export const SubContent = styled.div<ContentProps>`
   position: absolute;
   margin-top: -15px;
   border-bottom: ${(props) =>
-    props.active ? "1px solid black" : "5px solid #30231e"};
+    props.$active ? "1px solid black" : "5px solid #30231e"};
   display: flex;
   align-items: center;
   justify-content: center;

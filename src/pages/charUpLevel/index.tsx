@@ -62,7 +62,6 @@ export default function CharUpLevelPage() {
 
   useEffect(() => {
     findSkills();
-    console.log(character);
   }, [character]);
 
   const findSkills = async () => {
@@ -120,7 +119,7 @@ export default function CharUpLevelPage() {
       setAdventure({
         ...result,
         characters: [...(result.characters ?? [])].map((char) => {
-          if (char.id === selectedCharId) char.selected = true;
+          if (char.id === selectedCharId) char.active = true;
           return char;
         }),
       });

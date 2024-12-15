@@ -21,11 +21,6 @@ export class AdventureStore {
     await Api.post("/adventure", data);
   }
 
-  async startBattle(data: AdventureType): Promise<AdventureType | null> {
-    const result = await Api.post(`/adventure/${data.id}/startBattle`);
-    return result.data;
-  }
-
   async characterLevelUp(
     data: SaveAdventureCharacterType
   ): Promise<AdventureType | null> {

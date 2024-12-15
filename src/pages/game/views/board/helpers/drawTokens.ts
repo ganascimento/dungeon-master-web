@@ -94,8 +94,10 @@ const drawToken = (
   context.beginPath();
   context.arc(positionX, positionY, 20, 0, 2 * Math.PI);
   context.lineWidth = 3;
-  if (token.isMyChar) context.strokeStyle = myCharIdentColor;
-  else if (token.type === CharacterTypeEnum.Enemy)
+  if (token.isMyChar) {
+    if (token.current) context.strokeStyle = "blue";
+    else context.strokeStyle = myCharIdentColor;
+  } else if (token.type === CharacterTypeEnum.Enemy)
     context.strokeStyle = enemyIdentColor;
   context.stroke();
 };

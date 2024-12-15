@@ -56,11 +56,7 @@ const charCreationData: CharCreationType[] = [
   {
     icon: <BsInfoLg />,
     text: "Informações",
-    finished: (value: CharacterType) =>
-      !!value.name &&
-      value.name.length > 4 &&
-      !!value.description &&
-      value.description.length > 12,
+    finished: (value: CharacterType) => !!value.name && value.name.length >= 2,
   },
 ];
 

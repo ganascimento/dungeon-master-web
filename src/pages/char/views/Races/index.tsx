@@ -30,8 +30,8 @@ export default function RaceView(props: Props) {
             <span>{race.name}</span>
 
             <div className="popup">
-              {AbilitiesList.map((ability) => (
-                <S.Ability>
+              {AbilitiesList.map((ability, aIndex) => (
+                <S.Ability key={aIndex}>
                   <div className="content-name">
                     <div>{ability.icon}</div>
                     <span>{ability.text}</span>

@@ -13,6 +13,7 @@ import {
 } from "../../ultils/calcAttributeBonus";
 import { BonusDetail } from "../BonusDetail";
 import Wrapper from "../Wrapper";
+import { PlaySelectSkillSong } from "../../ultils/playSong";
 
 type Props = {
   skill: SkillType;
@@ -48,6 +49,7 @@ export const SkillDetails = (props: Props) => {
   };
 
   const handleClick = () => {
+    PlaySelectSkillSong();
     if (props.isSelected) {
       if (props.skill.currentTurn !== 0) return;
       props.setCharacter!({
@@ -158,7 +160,10 @@ export const SkillDetails = (props: Props) => {
               <></>
             )}
             {props.skill.type === SkillEnum.Mage &&
-            (!props.skill.effect || (props.skill.effect?.value ?? 0) < 0) ? (
+            (!props.skill.effects ||
+              props.skill.effects.find(
+                (effect) => (effect?.value ?? 0) < 0
+              )) ? (
               <div className="props">
                 <Icon icon="material-symbols:shield" />{" "}
                 {calcSkillMageResistence(props.skill)}
@@ -168,9 +173,11 @@ export const SkillDetails = (props: Props) => {
             )}
           </S.PropsContent>
           <Wrapper margin="12px 0 0 0">
-            {!!props.skill?.effect &&
-            props.skill?.effect.type !== EffectEnum.Move ? (
-              <BonusDetail effects={[props.skill?.effect]} />
+            {!!props.skill?.effects &&
+            props.skill?.effects.find(
+              (effect) => effect?.type !== EffectEnum.Move
+            ) ? (
+              <BonusDetail effects={props.skill?.effects ?? []} />
             ) : (
               <></>
             )}

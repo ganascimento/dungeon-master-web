@@ -39,7 +39,7 @@ export const Content = ({ children, type = 1 }: Props) => {
   };
 
   return (
-    <S.Content background={`url(${image})`} useImage={true}>
+    <S.Content background={`url(${image})`} $useImage={true}>
       <S.SubContent>{children}</S.SubContent>
     </S.Content>
   );

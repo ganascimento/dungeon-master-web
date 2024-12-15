@@ -1,6 +1,9 @@
 import styled from "styled-components";
 
-export const DificutyContent = styled.div`
+type SubTitleProps = {
+  color: string;
+};
+export const SubTitle = styled.div<SubTitleProps>`
   width: 100%;
   display: flex;
   align-items: center;
@@ -8,6 +11,7 @@ export const DificutyContent = styled.div`
   margin-bottom: 25px;
   margin-top: 25px;
   font-size: 22px;
+  color: ${(props) => props.color};
 `;
 
 export const PersonAddContent = styled.div`

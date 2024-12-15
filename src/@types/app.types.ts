@@ -58,7 +58,7 @@ export type CharacterType = {
   currentLife?: number;
   totalStamina?: number;
   currentStamina?: number;
-  selected?: boolean;
+  active?: boolean;
   exp?: number;
   allowUp?: boolean;
   nextUpExp?: number;
@@ -130,7 +130,8 @@ export type SkillType = {
   selected?: boolean;
   duration?: boolean;
   selectedPositions?: PositionType[];
-  effect?: EffectType;
+  effects?: EffectType[];
+  song: string;
 };
 
 export type BoarImageType = {

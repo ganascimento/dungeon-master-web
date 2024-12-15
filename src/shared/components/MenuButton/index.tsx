@@ -7,7 +7,6 @@ type Props = {
   width?: number;
   onClick?: () => void;
   marginBottom?: string;
-  title?: string;
   loading?: boolean;
   active?: boolean;
 };
@@ -15,10 +14,19 @@ type Props = {
 export const MenuButton = (props: Props) => {
   return (
     <S.Content
-      {...props}
+      disabled={props.disabled}
+      width={props.width}
+      $marginBottom={props.marginBottom}
+      $active={props.active}
       onClick={props.disabled || props.loading ? undefined : props.onClick}
     >
-      <S.SubContent {...props} onClick={undefined}>
+      <S.SubContent
+        disabled={props.disabled}
+        width={props.width}
+        $marginBottom={props.marginBottom}
+        $active={props.active}
+        onClick={undefined}
+      >
         {props.loading ? (
           <PulseLoader size={8} color="rgba(0,0,0,.5)" />
         ) : (

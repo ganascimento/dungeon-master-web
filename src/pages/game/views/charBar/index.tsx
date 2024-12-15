@@ -4,67 +4,35 @@ import * as S from "./styles";
 import { Icon } from "@iconify/react";
 import { SkillDetails } from "../../../../shared/components/SkillDetails";
 import AdventureContext from "../../../../shared/context/AdventureContext";
-import { BoardStore } from "../../../../shared/store/board.Store";
 import LoadingContext from "../../../../shared/context/LoadingContext";
 import { CharacterType } from "../../../../@types/app.types";
 import { BattleEnum } from "../../../../@types/constants.types";
-import { AdventureStore } from "../../../../shared/store/adventure.store";
 import { useNavigate } from "react-router-dom";
 import { ROUTER_PATHS } from "../../../../shared/router/router.path";
 import Wrapper from "../../../../shared/components/Wrapper";
 import { BonusDetail } from "../../../../shared/components/BonusDetail";
+import { GetMyChars } from "../../../../shared/ultils/characterGets";
 import {
-  GetMyChars,
-  GetSelectedChar,
-} from "../../../../shared/ultils/characterGets";
+  PlayFinishTurnSong,
+  PlayNextSong,
+} from "../../../../shared/ultils/playSong";
+import { GameStore } from "../../../../shared/store/game.store";
 
 export default function CharBarView() {
   const [loading, setLoading] = useContext(LoadingContext);
   const [adventure, setAdventure] = useContext(AdventureContext);
   const [character, setCharacter] = useState<CharacterType>();
 
-  const navigate = useNavigate();
-
   useEffect(() => {
-    let mCharacter = GetSelectedChar(adventure);
-
-    if (!mCharacter) {
-      const activeTurnIdent = adventure?.battle?.turnOrder?.find(
-        (turnOrder) => turnOrder.active
-      );
-
-      if (!!activeTurnIdent) {
-        setAdventure({
-          ...adventure,
-          characters: [...(adventure?.characters ?? [])].map((char) => {
-            char.selected = false;
-            if (
-              char.id === activeTurnIdent?.characterIdent &&
-              !!char.token?.isMyChar
-            )
-              char.selected = true;
-            return char;
-          }),
-        });
-        return;
-      } else {
-        let finded = false;
-        setAdventure({
-          ...adventure,
-          characters: [...(adventure?.characters ?? [])].map((char) => {
-            char.selected = false;
-            if (!finded && !!char.token?.isMyChar) {
-              char.selected = true;
-              finded = true;
-            }
-            return char;
-          }),
-        });
-      }
-    }
-
+    const mCharacter = adventure?.characters?.find(
+      (char) => char.token?.isMyChar && char.active
+    );
     if (!!mCharacter) setCharacter(mCharacter);
   }, [adventure]);
+
+  const gameStore = new GameStore();
+
+  const navigate = useNavigate();
 
   const calcLifePerc = (char: CharacterType) =>
     char?.currentLife !== 0
@@ -80,28 +48,21 @@ export default function CharBarView() {
       : 50;
 
   const calcExpPerc = () => {
+    console.log(character?.exp, character?.nextUpExp);
     if (!character) return 0;
     return ((character.exp ?? 0) * 100) / (character.nextUpExp ?? 1);
   };
 
   const endTurnHandle = async () => {
     setLoading(true);
-    try {
-      const result = await new BoardStore().characterEndTurn(adventure!.id!);
-      setAdventure(result);
-    } finally {
-      setLoading(false);
-    }
+    PlayFinishTurnSong();
+    await gameStore.characterEndTurn(adventure!.id!);
   };
 
   const startBattleHandle = async () => {
     setLoading(true);
-    try {
-      const result = await new AdventureStore().startBattle(adventure!);
-      if (result !== null) setAdventure(result);
-    } finally {
-      setLoading(false);
-    }
+    PlayNextSong();
+    await gameStore.startBattle(adventure!.id!);
   };
 
   const exitHandle = () => {
@@ -116,8 +77,8 @@ export default function CharBarView() {
     setAdventure({
       ...adventure,
       characters: [...(adventure?.characters ?? [])].map((c) => {
-        c.selected = false;
-        if (c.id === char.id && !!c.token?.isMyChar) c.selected = true;
+        c.active = false;
+        if (c.id === char.id && !!c.token?.isMyChar) c.active = true;
         return c;
       }),
     });
@@ -192,8 +153,8 @@ export default function CharBarView() {
           ?.filter((char) => char.id !== character?.id)
           ?.map((char) => (
             <S.MinAvatar
-              lifePerc={calcLifePerc(char)}
-              staminaPerc={calcStaminaPerc(char)}
+              $lifePerc={calcLifePerc(char)}
+              $staminaPerc={calcStaminaPerc(char)}
               onClick={() => selectCharacter(char)}
               key={char.id}
             >
@@ -215,9 +176,9 @@ export default function CharBarView() {
       </Wrapper>
 
       <S.Avatar
-        lifePerc={calcLifePerc(character!)}
-        staminaPerc={calcStaminaPerc(character!)}
-        expPerc={calcExpPerc()}
+        $lifePerc={calcLifePerc(character!)}
+        $staminaPerc={calcStaminaPerc(character!)}
+        $expPerc={calcExpPerc()}
         onClick={goProfileHandler}
       >
         <div className="content">

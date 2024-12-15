@@ -8,9 +8,11 @@ import { ROUTER_PATHS } from "../../shared/router/router.path";
 import BoardView from "./views/board";
 import BoardInfo from "./views/board/components/BoardInfo";
 import CharBarView from "./views/charBar";
+import { GameStore } from "../../shared/store/game.store";
+import { AdventureType } from "../../@types/app.types";
 
 export default function GamePage() {
-  const [adventure] = useContext(AdventureContext);
+  const [adventure, setAdventure] = useContext(AdventureContext);
   const [playerInfo, setPlayerInfo] = useState<any>({});
 
   const navigate = useNavigate();
@@ -20,7 +22,15 @@ export default function GamePage() {
       navigate(ROUTER_PATHS.Home);
       return;
     }
+
+    attachSocketEvents();
   }, []);
+
+  const attachSocketEvents = async () => {
+    new GameStore().attachActionResult((result: AdventureType) => {
+      if (result) setAdventure(result);
+    });
+  };
 
   return (
     <S.Content>

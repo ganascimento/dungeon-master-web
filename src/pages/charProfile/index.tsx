@@ -43,9 +43,9 @@ export default function CharProfilePage() {
     setAdventure({
       ...adventure,
       characters: [...(adventure?.characters ?? [])].map((char) => {
-        char.selected = false;
+        char.active = false;
         if (char.allowUp && char.id !== character?.id && !!char.token?.isMyChar)
-          char.selected = true;
+          char.active = true;
         return char;
       }),
     });

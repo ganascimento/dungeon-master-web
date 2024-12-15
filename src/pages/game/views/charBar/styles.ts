@@ -14,9 +14,9 @@ export const Content = styled.div`
 `;
 
 type AvatarProps = {
-  lifePerc: number;
-  staminaPerc: number;
-  expPerc?: number;
+  $lifePerc: number;
+  $staminaPerc: number;
+  $expPerc?: number;
 };
 export const Avatar = styled.div<AvatarProps>`
   box-shadow: 4px 4px 3px rgba(0, 0, 0, 0.4);
@@ -30,7 +30,7 @@ export const Avatar = styled.div<AvatarProps>`
   justify-content: center;
   border-radius: 50%;
   background: radial-gradient(closest-side, white 79%, transparent 80% 100%),
-    conic-gradient(#556b2f ${(props) => props.expPerc ?? 0}%, transparent 0%);
+    conic-gradient(#556b2f ${(props) => props.$expPerc ?? 0}%, transparent 0%);
   position: relative;
 
   .content {
@@ -43,12 +43,12 @@ export const Avatar = styled.div<AvatarProps>`
     border: 2px ridge #b78846;
     background: radial-gradient(closest-side, white 79%, transparent 80% 100%),
       conic-gradient(
-        #181619 ${(props) => props.staminaPerc}%,
+        #181619 ${(props) => props.$staminaPerc}%,
         #007bff 0,
         #007bff 50%,
 
         #dc3545 50%,
-        #dc3545 calc(${(props) => props.lifePerc}% + 50%),
+        #dc3545 calc(${(props) => props.$lifePerc}% + 50%),
         #181619 0%
       );
   }
@@ -238,12 +238,12 @@ export const MinAvatar = styled.div<AvatarProps>`
   border: 2px ridge #b78846;
   background: radial-gradient(closest-side, white 79%, transparent 80% 100%),
     conic-gradient(
-      #181619 ${(props) => props.staminaPerc}%,
+      #181619 ${(props) => props.$staminaPerc}%,
       #007bff 0,
       #007bff 50%,
 
       #dc3545 50%,
-      #dc3545 calc(${(props) => props.lifePerc}% + 50%),
+      #dc3545 calc(${(props) => props.$lifePerc}% + 50%),
       #181619 0%
     );
   box-shadow: 4px 4px 3px rgba(0, 0, 0, 0.4);

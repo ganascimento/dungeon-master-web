@@ -21,16 +21,30 @@ type Props = {
 };
 
 const Wrapper = (props: Props) => {
-  return <S.Wrapper {...props}>{props.children}</S.Wrapper>;
+  return (
+    <S.Wrapper
+      $alignItems={props.alignItems}
+      $justifyContent={props.justifyContent}
+      margin={props.margin}
+      gap={props.gap}
+      $flexDirection={props.flexDirection}
+      width={props.width}
+      flexWrap={props.flexWrap}
+      maxWidth={props.maxWidth}
+      height={props.height}
+    >
+      {props.children}
+    </S.Wrapper>
+  );
 };
 
 export default Wrapper;
 
 export const wrapperProperties = {
   children: "ReactNode",
-  flexDirection: "row,column",
-  alignItems: "center,start,end",
-  justifyContent: "space-between,start,center,end",
+  $flexDirection: "row,column",
+  $alignItems: "center,start,end",
+  $justifyContent: "space-between,start,center,end",
   margin: "string",
   gap: "string",
   width: "string",

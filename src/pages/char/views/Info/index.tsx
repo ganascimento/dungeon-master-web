@@ -23,7 +23,7 @@ export default function InfoView(props: Props) {
           type="text"
           value={props.character.name}
           onChange={(e) => onChangeName(e.target.value)}
-          placeholder="Digite o nome"
+          placeholder="Digite o nome*"
           maxLength={25}
         />
         <S.TextArea

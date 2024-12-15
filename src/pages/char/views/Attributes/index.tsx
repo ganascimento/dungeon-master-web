@@ -106,9 +106,9 @@ export default function AttributesView(props: Props) {
             </S.Button>
             <div className="points">{ability.points}</div>
             <S.Button
-              disabled={ability.points === 20}
+              disabled={ability.points === 17}
               onClick={
-                ability.points === 20
+                ability.points === 17
                   ? undefined
                   : () => handleAddPoints(ability.text ?? "")
               }

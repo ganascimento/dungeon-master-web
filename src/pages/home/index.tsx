@@ -13,6 +13,8 @@ import { logOff } from "../../shared/security/authentication";
 import { ROUTER_PATHS } from "../../shared/router/router.path";
 import { useNavigate } from "react-router-dom";
 import InformationView from "./view/Information";
+import { PlayClickSong } from "../../shared/ultils/playSong";
+import { PauseMusic } from "../../shared/ultils/playMusics";
 
 export default function HomePage() {
   const [isOpenCreateCampain, setIsOpenCreateCampain] = useState(false);
@@ -25,21 +27,35 @@ export default function HomePage() {
   const navigate = useNavigate();
   const adventureStore = new AdventureStore();
 
-  const handleOpenCreateCampain = () => setIsOpenCreateCampain(true);
+  const handleOpenCreateCampain = () => {
+    PlayClickSong();
+    setIsOpenCreateCampain(true);
+  };
 
-  const handleOpenSelectCampain = () => setIsOpenSelectCampain(true);
+  const handleOpenSelectCampain = () => {
+    PlayClickSong();
+    setIsOpenSelectCampain(true);
+  };
 
-  const handleIsOpenCreatePerson = () => setIsOpenCreatePerson(true);
+  const handleIsOpenCreatePerson = () => {
+    PlayClickSong();
+    setIsOpenCreatePerson(true);
+  };
 
-  const handleIsOpenInfo = () => setIsOpenInfo(true);
+  const handleIsOpenInfo = () => {
+    PlayClickSong();
+    setIsOpenInfo(true);
+  };
 
   const handleExit = () => {
+    PlayClickSong();
     logOff();
     navigate(ROUTER_PATHS.Login);
   };
 
   useEffect(() => {
     findData();
+    PauseMusic();
   }, []);
 
   const findData = async () => {

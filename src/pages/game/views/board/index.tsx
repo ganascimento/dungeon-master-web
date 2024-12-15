@@ -9,11 +9,12 @@ import { OnBoardClick } from "./helpers/onBoardClick";
 import { GetImagePath } from "./helpers/getBoardImage";
 import { DrawTraps } from "./helpers/drawTraps";
 import { LoadImages } from "./helpers/loadImages";
-import { GetBoardSize } from "./helpers/getSizes";
+import { GetBoardSize, GetMatrixFromPosition } from "./helpers/getSizes";
 import LoadingContext from "../../../../shared/context/LoadingContext";
 import { DrawMouseMove } from "./helpers/drawMouseMove";
 import { GetAdventureTokens } from "./helpers/getAdventureTokens";
 import { DrawTargets } from "./helpers/drawTargets";
+import { OnMouseMove } from "./helpers/onMouseMove";
 
 const initialValue: BoardConfigType = {
   height: 780,
@@ -33,9 +34,11 @@ export default function BoardView(props: Props) {
   const [, setLoadingCtx] = useContext(LoadingContext);
   const [loading] = useContext(LoadingContext);
   const [boardConfig, setBoardConfig] = useState<BoardConfigType>(initialValue);
-  const [frameRef, setFrameRef] = useState<any>();
   const [tokens, setTokens] = useState<TokenType[]>([]);
   const [lastMouseMoveEvent, setLastMouseMoveEvent] = useState<any>();
+  const [lastMoveX, setLastMoveX] = useState<number>();
+  const [lastMoveY, setLastMoveY] = useState<number>();
+  const [frameRef, setFrameRef] = useState<number>();
 
   const canvasRef = useRef(null);
 
@@ -57,10 +60,7 @@ export default function BoardView(props: Props) {
 
   useEffect(() => {
     if (!boardConfig || !boardConfig.context) return;
-    if (frameRef) {
-      window.cancelAnimationFrame(frameRef);
-      setFrameRef(undefined);
-    }
+    if (frameRef) window.cancelAnimationFrame(frameRef);
 
     const render = () => {
       boardConfig.context.clearRect(
@@ -95,15 +95,25 @@ export default function BoardView(props: Props) {
       setAdventure,
       tokens,
       setTokens,
-      props.playerInfo,
-      props.setPlayerInfo,
       setLoadingCtx
     );
   };
 
   const onMouseMove = (event: MouseEvent) => {
     if (loading) return;
-    setLastMouseMoveEvent(event);
+    const [matrixX, matrixY] = GetMatrixFromPosition(event, boardConfig);
+    if (lastMoveX !== matrixX || lastMoveY !== matrixY) {
+      setLastMouseMoveEvent(event);
+      OnMouseMove(
+        event,
+        boardConfig,
+        adventure!,
+        props.playerInfo,
+        props.setPlayerInfo
+      );
+      setLastMoveX(matrixX);
+      setLastMoveY(matrixY);
+    }
   };
 
   const getImage = () => adventure?.location?.map.fileName;
@@ -112,7 +122,7 @@ export default function BoardView(props: Props) {
     <S.Content
       width={boardConfig.width}
       height={boardConfig.height}
-      imagePath={GetImagePath(getImage())}
+      $imagePath={GetImagePath(getImage())}
     >
       <canvas
         ref={canvasRef}

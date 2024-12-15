@@ -9,6 +9,8 @@ import AdventureContext from "../../../../shared/context/AdventureContext";
 import { AdventureStore } from "../../../../shared/store/adventure.store";
 import Wrapper from "../../../../shared/components/Wrapper";
 import { MenuButton } from "../../../../shared/components/MenuButton";
+import { PlayMusic } from "../../../../shared/ultils/playMusics";
+import { PlayStartSong } from "../../../../shared/ultils/playSong";
 
 type Props = {
   isOpen: boolean;
@@ -26,6 +28,8 @@ export default function SelectAdventureView(props: Props) {
     const result = await adventureStore.getById(adventure!.id!);
     setAdventure(result);
     navigate(ROUTER_PATHS.Game);
+    PlayMusic();
+    PlayStartSong();
   };
 
   return (

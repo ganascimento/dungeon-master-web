@@ -31,9 +31,9 @@ export default function BoardInfo(props: Props) {
     return (
       <S.PeronInfo
         id="peronInfoItem"
-        positionX={getX()}
-        positionY={getY()}
-        lifePerc={calcLife()}
+        $positionX={getX()}
+        $positionY={getY()}
+        $lifePerc={calcLife()}
       >
         <div className="item">
           <span>Nome:</span> {props.playerInfo.name}

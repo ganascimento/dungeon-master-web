@@ -21,7 +21,7 @@ export const SpaceContent = styled.div`
 `;
 
 type TileProps = {
-  iconColor: string;
+  $iconColor: string;
 };
 export const Tile = styled.div<TileProps>`
   background: #e2dfd4;
@@ -49,7 +49,7 @@ export const Tile = styled.div<TileProps>`
       justify-content: center;
       font-size: 30px;
       margin-bottom: 5px;
-      color: ${(props) => props.iconColor};
+      color: ${(props) => props.$iconColor};
       background: #18161990;
     }
 

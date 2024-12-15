@@ -1,14 +1,14 @@
 import styled from "styled-components";
 
 type PeronInfoProps = {
-  positionX: number;
-  positionY: number;
-  lifePerc: number;
+  $positionX: number;
+  $positionY: number;
+  $lifePerc: number;
 };
 export const PeronInfo = styled.div<PeronInfoProps>`
   position: absolute;
-  top: ${(props) => props.positionY + "px"};
-  left: ${(props) => props.positionX + "px"};
+  top: ${(props) => props.$positionY + "px"};
+  left: ${(props) => props.$positionX + "px"};
   width: 250px;
   border: 3px ridge #b78846;
   border-radius: 10px 10px 0 10px;
@@ -76,7 +76,7 @@ export const PeronInfo = styled.div<PeronInfoProps>`
   }
 
   .life {
-    width: ${(props) => props.lifePerc ?? 100}%;
+    width: ${(props) => props.$lifePerc ?? 100}%;
     height: 15px;
     background-color: red;
     border-radius: 6px;

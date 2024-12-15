@@ -3,13 +3,13 @@ import styled from "styled-components";
 type ContentProps = {
   width: number;
   height: number;
-  imagePath: string;
+  $imagePath: string;
 };
 export const Content = styled.div<ContentProps>`
   height: ${(props) => props.height + "px"};
   width: ${(props) => props.width + "px"};
   background: #ccc;
-  background-image: url(${(props) => props.imagePath});
+  background-image: url(${(props) => props.$imagePath});
   background-size: 100% 100%;
   background-repeat: no-repeat;
   border-radius: 7px;
