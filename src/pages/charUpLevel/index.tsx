@@ -17,6 +17,7 @@ import { ROUTER_PATHS } from "../../shared/router/router.path";
 import { AdventureStore } from "../../shared/store/adventure.store";
 import { toast } from "react-toastify";
 import { GetSelectedChar } from "../../shared/ultils/characterGets";
+import { GetAdventureParse } from "../../shared/ultils/getAdventureParse";
 
 type CharCreationType = {
   icon: ReactNode;
@@ -68,7 +69,7 @@ export default function CharUpLevelPage() {
     if (!character?.class?.type) return;
     setLoading(true);
     try {
-      const result = await skillStore.getByLevelAndClassAsync(
+      const result = await skillStore.getByLevelAndClass(
         (character?.level ?? 0) + 1,
         character?.class?.type
       );
@@ -117,7 +118,7 @@ export default function CharUpLevelPage() {
       });
       if (!result) throw new Error();
       setAdventure({
-        ...result,
+        ...GetAdventureParse(result),
         characters: [...(result.characters ?? [])].map((char) => {
           if (char.id === selectedCharId) char.active = true;
           return char;

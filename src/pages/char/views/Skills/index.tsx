@@ -1,21 +1,32 @@
+/* eslint-disable react-hooks/exhaustive-deps */
 import { CharacterType, SkillType } from "../../../../@types/app.types";
 import * as S from "./styles";
 import { SkillDetails } from "../../../../shared/components/SkillDetails";
 import { useEffect, useState } from "react";
-import { SkillEnum } from "../../../../@types/constants.types";
+import {
+  CharacterModeEnum,
+  SkillEnum,
+} from "../../../../@types/constants.types";
 import Wrapper from "../../../../shared/components/Wrapper";
+import { CHARACTER_PARAMS } from "../../../../shared/configurations/characterParams";
 
 type Props = {
   skills?: SkillType[];
   character: CharacterType;
   setCharacter: (value: CharacterType) => void;
+  characterMode: CharacterModeEnum;
 };
 
 export default function SkillView(props: Props) {
-  const [amount, setAmount] = useState(6);
+  const [amount, setAmount] = useState(
+    CHARACTER_PARAMS(props.characterMode).MaxSkills
+  );
 
   useEffect(() => {
-    setAmount(6 - (props.character.skills?.length ?? 0));
+    setAmount(
+      CHARACTER_PARAMS(props.characterMode).MaxSkills -
+        (props.character.skills?.length ?? 0)
+    );
   }, [props.character]);
 
   const melee = props.skills?.filter((x) => x.type === SkillEnum.Melee);

@@ -13,14 +13,15 @@ import { UserStore } from "../../shared/store/user.store";
 import { object, string } from "yup";
 import { toast } from "react-toastify";
 import { CircleFlag } from "react-circle-flags";
-import { CircleLoader } from "react-spinners";
 import { setAuthentication } from "../../shared/security/authentication";
 
 export default function LoginPage() {
   const [loginData, setLoginData] = useState<LoginType>();
   const [createData, setCreateData] = useState<CreateUserType>();
-  const [isCreate, setIsCreate] = useState<boolean>(false);
-  const [loading, setLoading] = useState<boolean>(false);
+  const [isCreate, setIsCreate] = useState(false);
+  const [loading, setLoading] = useState(false);
+  const [validUserName, setValidUserName] = useState(false);
+  const [lastUserName, setLastUserName] = useState("");
 
   const userStore = new UserStore();
 
@@ -67,11 +68,31 @@ export default function LoginPage() {
 
     try {
       schemaCreate.validateSync(createData);
-      await userStore.createUser(createData);
+      await userStore.create(createData);
       setIsCreate(false);
       toast.success("Usuário criado com sucesso!");
     } catch (e: any) {
       toast.error(e.message);
+    } finally {
+      setLoading(false);
+    }
+  };
+
+  const handleCheckUserNameExists = async () => {
+    if (
+      !createData ||
+      !createData.name ||
+      createData.name.length < 4 ||
+      lastUserName.toUpperCase() === createData.name.toUpperCase()
+    )
+      return;
+    setLoading(true);
+    setLastUserName(createData.name);
+
+    try {
+      const exists = await userStore.checkUserExists(createData.name);
+      setValidUserName(!exists);
+      if (exists) toast.warning("Nome do usuário já existe!");
     } finally {
       setLoading(false);
     }
@@ -108,11 +129,12 @@ export default function LoginPage() {
               </Wrapper>
             </Wrapper>
 
-            {loading ? (
-              <CircleLoader color="#54d440" />
-            ) : (
-              <GameButton onClick={signInHandler} text="Login" />
-            )}
+            <GameButton
+              onClick={signInHandler}
+              text="Login"
+              loading={loading}
+              disabled={loading || !schemaLogin.isValidSync(loginData)}
+            />
 
             <S.CreateBtn onClick={() => setIsCreate(!isCreate)}>
               Criar uma conta
@@ -128,9 +150,10 @@ export default function LoginPage() {
             >
               <Wrapper width="30%">
                 <TextField
-                  placeholder="Nome"
+                  placeholder="Nome do usuário"
                   value={createData?.name}
                   onChange={(e) => setCreateData({ ...createData, name: e })}
+                  onBlur={handleCheckUserNameExists}
                   minLength={2}
                   maxLength={50}
                 />
@@ -179,11 +202,16 @@ export default function LoginPage() {
                 </S.Language>
               </Wrapper>
             </Wrapper>
-            {loading ? (
-              <CircleLoader color="#54d440" />
-            ) : (
-              <GameButton onClick={createUserHandler} text="Criar" />
-            )}
+            <GameButton
+              onClick={createUserHandler}
+              text="Criar usuário"
+              disabled={
+                !schemaCreate.isValidSync(createData) ||
+                loading ||
+                !validUserName
+              }
+              loading={loading}
+            />
             <S.CreateBtn onClick={() => setIsCreate(!isCreate)}>
               Voltar
             </S.CreateBtn>

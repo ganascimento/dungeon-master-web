@@ -7,6 +7,7 @@ import { CircleLoader } from "react-spinners";
 import { AdventureLogType } from "../../../../@types/app.types";
 import LoadingContext from "../../../../shared/context/LoadingContext";
 import { GetMyChars } from "../../../../shared/ultils/characterGets";
+import { BattleEnum } from "../../../../@types/constants.types";
 
 export default function ChatView() {
   const [adventure] = useContext(AdventureContext);
@@ -20,7 +21,10 @@ export default function ChatView() {
     )?.characterIdent;
     const myChars = GetMyChars(adventure);
 
-    if (myChars?.map((char) => char.id).includes(activeCharacter))
+    if (
+      myChars?.map((char) => char.id).includes(activeCharacter) ||
+      adventure?.battle?.status === BattleEnum.Win
+    )
       setLoadingCtx(false);
   }, [adventure]);
 

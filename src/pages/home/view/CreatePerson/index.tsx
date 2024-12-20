@@ -10,6 +10,7 @@ import * as S from "./styles";
 import { Icon } from "@iconify/react";
 import { ROUTER_PATHS } from "../../../../shared/router/router.path";
 import { CharacterStore } from "../../../../shared/store/character.store";
+import { CharacterModeEnum } from "../../../../@types/constants.types";
 
 type Props = {
   isOpen: boolean;
@@ -20,6 +21,9 @@ type Props = {
 export default function CreatePersonView(props: Props) {
   const [, setLoading] = useContext(LoaderContext);
   const [characters, setCharacters] = useState<CharacterType[]>([]);
+  const [charactersPvP, setCharactersPvP] = useState<CharacterType[]>([]);
+  const [slots, setSlots] = useState<number[]>([1, 2, 3, 4, 5]);
+  const [slotsPvP, setSlotsPvP] = useState<number[]>([1, 2, 3, 4, 5]);
 
   const characterStore = new CharacterStore();
 
@@ -30,14 +34,40 @@ export default function CreatePersonView(props: Props) {
   }, [props.isOpen]);
 
   const goToCreate = (id: string) => {
-    navigate(ROUTER_PATHS.Char.replace(":id", id));
+    navigate(
+      ROUTER_PATHS.Char.replace(
+        ":type",
+        CharacterModeEnum.Normal.toString()
+      ).replace(":id", id)
+    );
+  };
+
+  const goToCreatePvP = (id: string) => {
+    navigate(
+      ROUTER_PATHS.Char.replace(
+        ":type",
+        CharacterModeEnum.PvP.toString()
+      ).replace(":id", id)
+    );
   };
 
   const getCharacters = async () => {
     setLoading(true);
     try {
       const mCharacters = await characterStore.getAll();
-      if (mCharacters) setCharacters(mCharacters);
+      if (mCharacters) {
+        const normalChars = mCharacters.filter(
+          (c) => c.mode === CharacterModeEnum.Normal
+        );
+        const pvpChars = mCharacters.filter(
+          (c) => c.mode === CharacterModeEnum.PvP
+        );
+
+        setCharacters(normalChars);
+        setCharactersPvP(pvpChars);
+        setSlots([...slots].slice(0, 5 - normalChars.length));
+        setSlotsPvP([...slotsPvP].slice(0, 5 - pvpChars.length));
+      }
     } finally {
       setLoading(false);
     }
@@ -54,6 +84,7 @@ export default function CreatePersonView(props: Props) {
         justifyContent="space-between"
         height="100%"
       >
+        <S.SubTitle>Personagens de campanha</S.SubTitle>
         <S.PersonAddContent>
           {characters.map((character, index) => (
             <S.PersonAdd onClick={() => goToCreate(character.id!)} key={index}>
@@ -61,11 +92,32 @@ export default function CreatePersonView(props: Props) {
               <div>{character.name}</div>
             </S.PersonAdd>
           ))}
-          <S.PersonAdd onClick={() => goToCreate("0")}>
-            <Icon icon="ic:baseline-add" />
-          </S.PersonAdd>
+          {slots.map((index) => (
+            <S.PersonAdd onClick={() => goToCreate("0")} key={index}>
+              <Icon icon="ic:baseline-add" />
+            </S.PersonAdd>
+          ))}
         </S.PersonAddContent>
 
+        <S.Space />
+
+        <S.SubTitle>Personagens PvP</S.SubTitle>
+        <S.PersonAddContent>
+          {charactersPvP.map((character, index) => (
+            <S.PersonAdd
+              onClick={() => goToCreatePvP(character.id!)}
+              key={index}
+            >
+              <Icon icon={character.class?.icon!} fontSize={40} />
+              <div>{character.name}</div>
+            </S.PersonAdd>
+          ))}
+          {slotsPvP.map((index) => (
+            <S.PersonAdd onClick={() => goToCreatePvP("0")} key={index}>
+              <Icon icon="ic:baseline-add" />
+            </S.PersonAdd>
+          ))}
+        </S.PersonAddContent>
         <Wrapper
           justifyContent="end"
           alignItems="end"

@@ -12,6 +12,7 @@ export const GetAdventureTokens = (adventure: AdventureType): TokenType[] => {
       classType: character.class?.type,
       death: (character.currentLife ?? 0) <= 0,
       current: activeTurnIdent?.characterIdent === character.id,
+      mode: adventure.mode,
     });
   });
 

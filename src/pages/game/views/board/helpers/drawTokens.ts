@@ -1,5 +1,6 @@
 import { BoardConfigType, TokenType } from "../../../../../@types/app.types";
 import {
+  AdventureModeEnum,
   CharacterTypeEnum,
   ClassEnum,
 } from "../../../../../@types/constants.types";
@@ -7,6 +8,8 @@ import { GetPositionFromMatrix } from "./getSizes";
 
 const myCharIdentColor = "yellow";
 const enemyIdentColor = "red";
+const activeTurnColor = "blue";
+const allyCharColor = "lightBlue";
 
 export const DrawTokens = (
   boardConfig: BoardConfigType,
@@ -67,7 +70,7 @@ const drawToken = (
   context.fillStyle = token.color;
   context.fill();
 
-  if (token.isMyChar) {
+  if (token.classType) {
     context.beginPath();
     context.arc(positionX, positionY, 18, 0, 2 * Math.PI);
     context.lineWidth = 2;
@@ -94,11 +97,15 @@ const drawToken = (
   context.beginPath();
   context.arc(positionX, positionY, 20, 0, 2 * Math.PI);
   context.lineWidth = 3;
-  if (token.isMyChar) {
-    if (token.current) context.strokeStyle = "blue";
-    else context.strokeStyle = myCharIdentColor;
+  if (token.current) {
+    context.strokeStyle = activeTurnColor;
+  } else if (token.isMyChar) {
+    context.strokeStyle = myCharIdentColor;
   } else if (token.type === CharacterTypeEnum.Enemy)
     context.strokeStyle = enemyIdentColor;
+  else
+    context.strokeStyle =
+      token.mode === AdventureModeEnum.PvP ? enemyIdentColor : allyCharColor;
   context.stroke();
 };
 

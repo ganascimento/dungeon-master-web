@@ -6,6 +6,9 @@ import {
   MoveEnum,
   SkillEnum,
   ClassEnum,
+  RoomEnum,
+  CharacterModeEnum,
+  AdventureModeEnum,
 } from "./constants.types";
 
 export type AdventureType = {
@@ -17,6 +20,7 @@ export type AdventureType = {
   location?: LocationType;
   battle?: BattleType;
   difficultyLevel?: number;
+  mode?: AdventureModeEnum;
 };
 
 export type RaceType = {
@@ -64,6 +68,8 @@ export type CharacterType = {
   nextUpExp?: number;
   level?: number;
   effects?: EffectType[];
+  user?: UserType;
+  mode?: CharacterModeEnum;
 };
 
 export type TokenType = {
@@ -78,6 +84,7 @@ export type TokenType = {
   death?: boolean;
   classType?: ClassEnum;
   current?: boolean;
+  mode?: AdventureModeEnum;
 };
 
 export type BoardConfigType = {
@@ -175,6 +182,13 @@ export type CreateUserType = {
   language?: string;
 };
 
+export type UpdateUserType = {
+  currentPassword?: string;
+  newPassword?: string;
+  confirmNewPassword?: string;
+  language?: string;
+};
+
 export type AuthTokenType = {
   authenticated?: boolean;
   accessToken?: string;
@@ -196,4 +210,87 @@ export type EffectType = {
   value?: number;
   roll?: string;
   active: boolean;
+};
+
+export type RoomType = {
+  id: string;
+  name: string;
+  adventureId: string;
+  status: RoomEnum;
+  password?: string;
+  players: RoomPlayerType[];
+  userId: string;
+  difficultyLevel?: number;
+};
+
+export type RoomPlayerType = {
+  userId: string;
+  userName: string;
+  character?: CharacterType;
+};
+
+export type RoomMinimalType = {
+  id: string;
+  name: string;
+  status: RoomEnum;
+  password?: string;
+  playersCount: number;
+  userId: string;
+  adventureId?: string;
+};
+
+export type UserType = {
+  id: string;
+};
+
+export type SoundType = {
+  volume?: number;
+  enable?: boolean;
+};
+
+export type StatisticBattleType = {
+  type: number;
+  difficultyLevel: number;
+  totalVictory: number;
+  totalDefeat: number;
+};
+
+export type StatisticCharacterType = {
+  type: number;
+  ident: string;
+  totalVictory: number;
+  totalDefeat: number;
+};
+
+export type StatisticPvPType = {
+  userName: string;
+  totalVictory: number;
+  totalDefeat: number;
+};
+
+export type PvPRoomMinimalType = {
+  id: string;
+  name: string;
+  status: RoomEnum;
+  password?: string;
+  playersCount: number;
+  userId: string;
+  adventureId?: string;
+};
+
+export type PvPType = {
+  id: string;
+  name: string;
+  adventureId: string;
+  status: RoomEnum;
+  password?: string;
+  players: PvPRoomPlayerType[];
+  userId: string;
+};
+
+export type PvPRoomPlayerType = {
+  userId: string;
+  userName: string;
+  characterIds?: string[];
+  ready?: boolean;
 };

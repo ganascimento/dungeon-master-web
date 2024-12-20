@@ -15,7 +15,7 @@ import { AdventureStore } from "../../../../shared/store/adventure.store";
 import * as S from "./styles";
 import { Icon } from "@iconify/react";
 import { CharacterStore } from "../../../../shared/store/character.store";
-import { PlayClickSong } from "../../../../shared/ultils/playSong";
+import { CharacterModeEnum } from "../../../../@types/constants.types";
 
 type Props = {
   isOpen: boolean;
@@ -40,13 +40,14 @@ export default function CreateAdventureView(props: Props) {
   });
 
   const getCharacters = async () => {
-    const mCharacters = await characterStore.getAll();
+    const mCharacters = await characterStore.getAllByMode(
+      CharacterModeEnum.Normal
+    );
     if (!!mCharacters) setCharacters(mCharacters);
   };
 
   const handleCreate = async () => {
     if (!data) return;
-    PlayClickSong();
     setLoading(true);
     try {
       schema.validateSync(data);
@@ -102,50 +103,35 @@ export default function CreateAdventureView(props: Props) {
             text="Iniciante"
             marginBottom="0px"
             width={150}
-            onClick={() => {
-              PlayClickSong();
-              setData({ ...data, difficultyLevel: 1 });
-            }}
+            onClick={() => setData({ ...data, difficultyLevel: 1 })}
             active={data?.difficultyLevel === 1}
           />
           <MenuButton
             text="Normal"
             marginBottom="0px"
             width={150}
-            onClick={() => {
-              PlayClickSong();
-              setData({ ...data, difficultyLevel: 2 });
-            }}
+            onClick={() => setData({ ...data, difficultyLevel: 2 })}
             active={data?.difficultyLevel === 2}
           />
           <MenuButton
             text="Difícil"
             marginBottom="0px"
             width={150}
-            onClick={() => {
-              PlayClickSong();
-              setData({ ...data, difficultyLevel: 3 });
-            }}
+            onClick={() => setData({ ...data, difficultyLevel: 3 })}
             active={data?.difficultyLevel === 3}
           />
           <MenuButton
             text="Herói"
             marginBottom="0px"
             width={150}
-            onClick={() => {
-              PlayClickSong();
-              setData({ ...data, difficultyLevel: 4 });
-            }}
+            onClick={() => setData({ ...data, difficultyLevel: 4 })}
             active={data?.difficultyLevel === 4}
           />
           <MenuButton
             text="Desafiante"
             marginBottom="0px"
             width={150}
-            onClick={() => {
-              PlayClickSong();
-              setData({ ...data, difficultyLevel: 5 });
-            }}
+            onClick={() => setData({ ...data, difficultyLevel: 5 })}
             active={data?.difficultyLevel === 5}
           />
         </Wrapper>

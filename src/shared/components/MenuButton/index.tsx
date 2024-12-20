@@ -1,5 +1,6 @@
 import { PulseLoader } from "react-spinners";
 import * as S from "./styles";
+import { PlayClickSong } from "../../ultils/playSong";
 
 type Props = {
   text: string;
@@ -9,6 +10,7 @@ type Props = {
   marginBottom?: string;
   loading?: boolean;
   active?: boolean;
+  color?: string;
 };
 
 export const MenuButton = (props: Props) => {
@@ -18,7 +20,14 @@ export const MenuButton = (props: Props) => {
       width={props.width}
       $marginBottom={props.marginBottom}
       $active={props.active}
-      onClick={props.disabled || props.loading ? undefined : props.onClick}
+      onClick={
+        props.disabled || props.loading
+          ? undefined
+          : () => {
+              PlayClickSong();
+              if (props.onClick) props.onClick();
+            }
+      }
     >
       <S.SubContent
         disabled={props.disabled}
@@ -26,6 +35,7 @@ export const MenuButton = (props: Props) => {
         $marginBottom={props.marginBottom}
         $active={props.active}
         onClick={undefined}
+        color={props.color}
       >
         {props.loading ? (
           <PulseLoader size={8} color="rgba(0,0,0,.5)" />

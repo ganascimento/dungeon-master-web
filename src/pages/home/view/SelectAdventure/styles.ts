@@ -30,4 +30,34 @@ export const Flag = styled.div`
     color: #b78846;
     margin-top: 12px;
   }
+
+  .name {
+    width: 50%;
+    display: flex;
+    justify-content: start;
+    margin-left: 35px;
+  }
+
+  .difficulty {
+    width: 25%;
+    display: flex;
+    justify-content: center;
+  }
+
+  .remove {
+    width: 25%;
+    display: flex;
+    justify-content: end;
+    align-items: center;
+    margin-right: 35px;
+    svg {
+      font-size: 23px;
+      transition: 0.2s;
+
+      &:hover {
+        font-size: 25px;
+        transition: 0.2s;
+      }
+    }
+  }
 `;

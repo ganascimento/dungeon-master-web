@@ -54,3 +54,19 @@ export enum ClassEnum {
   Archer = 4,
   Warlock = 5,
 }
+
+export enum RoomEnum {
+  Waiting = 1,
+  Started = 2,
+  Finish = 3,
+}
+
+export enum CharacterModeEnum {
+  Normal = 1,
+  PvP = 2,
+}
+
+export enum AdventureModeEnum {
+  Campaign = 1,
+  PvP = 2,
+}

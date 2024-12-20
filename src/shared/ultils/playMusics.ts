@@ -7,19 +7,26 @@ import music6 from "../../shared/assets/music/music6.mp3";
 import music7 from "../../shared/assets/music/music7.mp3";
 import music8 from "../../shared/assets/music/music8.mp3";
 import music9 from "../../shared/assets/music/music9.mp3";
+import { SoundStore } from "../store/sound.store";
+
+const soundStore = new SoundStore();
 
 export const PlayMusic = (lastIdent?: number) => {
-  const music = getRandomMusic();
+  const soundConfig = soundStore.getConfig();
 
-  const audio = new Audio(music.music);
-  audio.play();
-  audio.volume = 0.1;
+  if (soundConfig.enable) {
+    const music = getRandomMusic();
 
-  audio.addEventListener("ended", () => {
-    PlayMusic(music.ident);
-  });
+    const audio = new Audio(music.music);
+    audio.play();
+    audio.volume = soundConfig.volume ?? 0.1;
 
-  (globalThis as any).audio = audio;
+    audio.addEventListener("ended", () => {
+      PlayMusic(music.ident);
+    });
+
+    (globalThis as any).audio = audio;
+  }
 };
 
 export const PauseMusic = () => {

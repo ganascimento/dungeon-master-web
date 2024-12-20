@@ -25,6 +25,8 @@ import SkillView from "./views/Skills";
 import { Icon } from "@iconify/react";
 import { SkillStore } from "../../shared/store/skill.store";
 import { CharacterStore } from "../../shared/store/character.store";
+import { CharacterModeEnum } from "../../@types/constants.types";
+import { CHARACTER_PARAMS } from "../../shared/configurations/characterParams";
 
 type CharCreationType = {
   icon: ReactNode;
@@ -32,33 +34,40 @@ type CharCreationType = {
   finished: (value: CharacterType) => boolean;
 };
 
-const charCreationData: CharCreationType[] = [
-  {
-    icon: <Icon icon="game-icons:dwarf-helmet" />,
-    text: "Raça",
-    finished: (value: CharacterType) => !!value.race?.id,
-  },
-  {
-    icon: <MdOutlineHotelClass />,
-    text: "Classe",
-    finished: (value: CharacterType) => !!value.class?.id,
-  },
-  {
-    icon: <Icon icon="game-icons:skills" />,
-    text: "Atributos",
-    finished: (value: CharacterType) => CalcTotalPoints(value) === 0,
-  },
-  {
-    icon: <FaGripfire />,
-    text: "Habilidades",
-    finished: (value: CharacterType) => value.skills?.length === 6,
-  },
-  {
-    icon: <BsInfoLg />,
-    text: "Informações",
-    finished: (value: CharacterType) => !!value.name && value.name.length >= 2,
-  },
-];
+const charCreationData = (
+  characterMode: CharacterModeEnum
+): CharCreationType[] => {
+  return [
+    {
+      icon: <Icon icon="game-icons:dwarf-helmet" />,
+      text: "Raça",
+      finished: (value: CharacterType) => !!value.race?.id,
+    },
+    {
+      icon: <MdOutlineHotelClass />,
+      text: "Classe",
+      finished: (value: CharacterType) => !!value.class?.id,
+    },
+    {
+      icon: <Icon icon="game-icons:skills" />,
+      text: "Atributos",
+      finished: (value: CharacterType) =>
+        CalcTotalPoints(value, characterMode) === 0,
+    },
+    {
+      icon: <FaGripfire />,
+      text: "Habilidades",
+      finished: (value: CharacterType) =>
+        value.skills?.length === CHARACTER_PARAMS(characterMode).MaxSkills,
+    },
+    {
+      icon: <BsInfoLg />,
+      text: "Informações",
+      finished: (value: CharacterType) =>
+        !!value.name && value.name.length >= 2,
+    },
+  ];
+};
 
 const initialValue: CharacterType = {
   strength: 8,
@@ -94,6 +103,8 @@ export default function CharPage() {
     findSkills();
   }, [character.class]);
 
+  const characterMode: CharacterModeEnum = Number(params.type);
+
   const findClasses = async () => {
     setLoading(true);
     try {
@@ -118,8 +129,8 @@ export default function CharPage() {
     if (!character.class) return;
     setLoading(true);
     try {
-      const result = await skillStore.getByLevelAndClassAsync(
-        1,
+      const result = await skillStore.getByLevelAndClass(
+        CHARACTER_PARAMS(characterMode).BaseLevel,
         character.class.type
       );
       setSkills(result);
@@ -159,7 +170,11 @@ export default function CharPage() {
         );
       case 2:
         return (
-          <AttributesView character={character} setCharacter={setCharacter} />
+          <AttributesView
+            character={character}
+            setCharacter={setCharacter}
+            characterMode={characterMode}
+          />
         );
       case 3:
         return (
@@ -167,6 +182,7 @@ export default function CharPage() {
             character={character}
             setCharacter={setCharacter}
             skills={skills}
+            characterMode={characterMode}
           />
         );
       case 4:
@@ -181,7 +197,11 @@ export default function CharPage() {
   const handleSaveChar = async () => {
     setLoading(true);
     try {
-      await characterStore.save(character);
+      if (characterMode === CharacterModeEnum.Normal)
+        await characterStore.save(character);
+      else if (characterMode === CharacterModeEnum.PvP)
+        await characterStore.savePvP(character);
+
       handleBack();
     } finally {
       setLoading(false);
@@ -193,7 +213,7 @@ export default function CharPage() {
       <S.Content>
         <S.ContentPrincipal>
           <div className="margin"></div>
-          {charCreationData.map((data, index) => (
+          {charCreationData(characterMode).map((data, index) => (
             <div
               className={`content ${step === index ? "selected" : ""}`}
               onClick={() => setStep(index)}
@@ -212,14 +232,16 @@ export default function CharPage() {
         </S.ContentPrincipal>
         <S.ContentSecond>
           <div className="content-header">
-            <div className="header-icon">{charCreationData[step].icon}</div>
+            <div className="header-icon">
+              {charCreationData(characterMode)[step].icon}
+            </div>
           </div>
           {renderSteps()}
         </S.ContentSecond>
         <S.ContentImage>
           <GameButton text="Voltar" onClick={handleBack} />
-          {charCreationData.filter((x) => !x.finished(character)).length ===
-          0 ? (
+          {charCreationData(characterMode).filter((x) => !x.finished(character))
+            .length === 0 ? (
             <GameButton
               text={params.id === "0" ? "Criar" : "Salvar"}
               onClick={handleSaveChar}

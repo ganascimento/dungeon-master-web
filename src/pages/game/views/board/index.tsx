@@ -55,6 +55,7 @@ export default function BoardView(props: Props) {
     };
 
     setBoardConfig(value);
+    onResizeScreen(value);
     window.onresize = () => onResizeScreen(value);
   }, []);
 

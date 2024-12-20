@@ -9,6 +9,8 @@ import { AbilitiesList } from "../../../../shared/ultils/abilitiesList";
 import { CalcAttributeBonus } from "../../../../shared/ultils/calcAttributeBonus";
 import { RenderBonusString } from "../../../../shared/ultils/damageUltils";
 import Wrapper from "../../../../shared/components/Wrapper";
+import { CharacterModeEnum } from "../../../../@types/constants.types";
+import { CHARACTER_PARAMS } from "../../../../shared/configurations/characterParams";
 
 export type AbilityType = {
   field?: string;
@@ -21,21 +23,29 @@ export type AbilityType = {
 type Props = {
   character: CharacterType;
   setCharacter: (value: CharacterType) => void;
+  characterMode: CharacterModeEnum;
 };
 
 export default function AttributesView(props: Props) {
   const [abilities, setAbilities] = useState<AbilityType[]>(AbilitiesList);
-  const [totalPoints, setTotalPoints] = useState(20);
+  const [totalPoints, setTotalPoints] = useState(
+    CHARACTER_PARAMS(props.characterMode).BaseAttributesPoints
+  );
 
   useEffect(() => {
-    setTotalPoints(CalcTotalPoints(props.character));
+    setTotalPoints(CalcTotalPoints(props.character, props.characterMode));
     setAbilities(
       abilities.map((ability) => {
         ability.points = (props.character as any)[ability.field as any];
+        ability.bonus = CalcAttributeBonus(ability.points ?? 0);
         return ability;
       })
     );
   }, []);
+
+  const getTotalToDisable = CHARACTER_PARAMS(
+    props.characterMode
+  ).BaseTotalToDisable;
 
   const handleAddPoints = (text: string) => {
     if (totalPoints === 0) return;
@@ -106,9 +116,9 @@ export default function AttributesView(props: Props) {
             </S.Button>
             <div className="points">{ability.points}</div>
             <S.Button
-              disabled={ability.points === 17}
+              disabled={ability.points === getTotalToDisable}
               onClick={
-                ability.points === 17
+                ability.points === getTotalToDisable
                   ? undefined
                   : () => handleAddPoints(ability.text ?? "")
               }

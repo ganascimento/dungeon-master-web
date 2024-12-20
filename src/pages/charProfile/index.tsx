@@ -13,6 +13,7 @@ import { GameButton } from "../../shared/components/GameButton";
 import Wrapper from "../../shared/components/Wrapper";
 import { BattleEnum } from "../../@types/constants.types";
 import { GetMyChars, GetSelectedChar } from "../../shared/ultils/characterGets";
+import { GetAdventureParse } from "../../shared/ultils/getAdventureParse";
 
 export default function CharProfilePage() {
   const [adventure, setAdventure] = useContext(AdventureContext);
@@ -41,7 +42,7 @@ export default function CharProfilePage() {
 
   const handleNextPersonToUpLevel = () => {
     setAdventure({
-      ...adventure,
+      ...GetAdventureParse(adventure),
       characters: [...(adventure?.characters ?? [])].map((char) => {
         char.active = false;
         if (char.allowUp && char.id !== character?.id && !!char.token?.isMyChar)

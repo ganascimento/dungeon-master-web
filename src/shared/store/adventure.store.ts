@@ -27,4 +27,8 @@ export class AdventureStore {
     const result = await Api.put("/adventure/levelUp", data);
     return result.data;
   }
+
+  async delete(adventureId: string): Promise<void> {
+    await Api.delete(`/adventure/${adventureId}`);
+  }
 }

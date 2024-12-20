@@ -12,6 +12,7 @@ import {
 } from "../../../../../@types/constants.types";
 import { GameStore } from "../../../../../shared/store/game.store";
 import { GetSelectedChar } from "../../../../../shared/ultils/characterGets";
+import { GetAdventureParse } from "../../../../../shared/ultils/getAdventureParse";
 import { PlaySkillSong } from "../../../../../shared/ultils/playSong";
 import { CheckValidCast } from "./checkIsValidCast";
 import { GetElementInPosition } from "./getElementInPosition";
@@ -64,7 +65,7 @@ export const OnBoardClick = (
     !!elementInPosition.token.isMyChar
   ) {
     setAdventure({
-      ...adventure,
+      ...GetAdventureParse(adventure),
       characters: [...(adventure.characters ?? [])].map((character) => {
         character.active = false;
         if (character.id === elementInPosition.id) character.active = true;
@@ -119,7 +120,7 @@ const BattleClick = ({
 
         if (skill.target !== skill.selectedPositions?.length) {
           setAdventure({
-            ...adventure,
+            ...GetAdventureParse(adventure),
             characters: [...(adventure.characters ?? [])].map((char) => {
               if (char.active) {
                 char.skills = char.skills?.map((s) => {

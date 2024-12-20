@@ -2,14 +2,14 @@ import * as signalR from "@microsoft/signalr";
 import { getToken } from "../security/authentication";
 import { HubConnectionState } from "@microsoft/signalr";
 
-export class SignalRWebSocket {
+export class GameWebSocket {
   private static connection = new signalR.HubConnectionBuilder()
     .withUrl("http://localhost:5000/gamehub", {
       accessTokenFactory: () => getToken() as string,
     })
     .build();
 
-  private static async start(): Promise<void> {
+  static async start(): Promise<void> {
     await this.connection.start();
   }
 
@@ -21,26 +21,18 @@ export class SignalRWebSocket {
       await this.connection.stop();
   }
 
-  static async invoke(target: string, message: any): Promise<void> {
+  static async invoke(target: string, message: any = null): Promise<void> {
     if (
       !this.connection ||
       this.connection.state === HubConnectionState.Disconnected
     )
-      await SignalRWebSocket.start();
+      await GameWebSocket.start();
 
     await this.connection.invoke(target, message);
   }
 
   static async attachEvent(target: string, func: any): Promise<void> {
-    if (
-      !this.connection ||
-      this.connection.state === HubConnectionState.Disconnected
-    )
-      await SignalRWebSocket.start();
-
-    this.connection.on(target, (a: any) => {
-      console.log("event called", target);
-      func(a);
-    });
+    this.connection.off(target);
+    this.connection.on(target, func);
   }
 }

@@ -17,6 +17,7 @@ import {
   PlayNextSong,
 } from "../../../../shared/ultils/playSong";
 import { GameStore } from "../../../../shared/store/game.store";
+import { GetAdventureParse } from "../../../../shared/ultils/getAdventureParse";
 
 export default function CharBarView() {
   const [loading, setLoading] = useContext(LoadingContext);
@@ -48,7 +49,6 @@ export default function CharBarView() {
       : 50;
 
   const calcExpPerc = () => {
-    console.log(character?.exp, character?.nextUpExp);
     if (!character) return 0;
     return ((character.exp ?? 0) * 100) / (character.nextUpExp ?? 1);
   };
@@ -56,13 +56,12 @@ export default function CharBarView() {
   const endTurnHandle = async () => {
     setLoading(true);
     PlayFinishTurnSong();
-    await gameStore.characterEndTurn(adventure!.id!);
+    await gameStore.characterEndTurn();
   };
 
   const startBattleHandle = async () => {
-    setLoading(true);
     PlayNextSong();
-    await gameStore.startBattle(adventure!.id!);
+    await gameStore.startBattle();
   };
 
   const exitHandle = () => {
@@ -75,7 +74,7 @@ export default function CharBarView() {
 
   const selectCharacter = (char: CharacterType) => {
     setAdventure({
-      ...adventure,
+      ...GetAdventureParse(adventure),
       characters: [...(adventure?.characters ?? [])].map((c) => {
         c.active = false;
         if (c.id === char.id && !!c.token?.isMyChar) c.active = true;
@@ -109,18 +108,7 @@ export default function CharBarView() {
       adventure?.battle?.status === BattleEnum.Finish ||
       adventure?.battle?.status === BattleEnum.Lose
     )
-      return (
-        <S.ExitBtn
-          onClick={
-            getIsActiveCharacter() ||
-            adventure?.battle?.status === BattleEnum.Lose
-              ? exitHandle
-              : undefined
-          }
-        >
-          Sair
-        </S.ExitBtn>
-      );
+      return <S.ExitBtn onClick={exitHandle}>Sair</S.ExitBtn>;
 
     return (
       <S.StartBtn
@@ -214,7 +202,7 @@ export default function CharBarView() {
             isSelected={true}
             setCharacter={(e) =>
               setAdventure({
-                ...adventure,
+                ...GetAdventureParse(adventure),
                 characters: [...(adventure?.characters ?? [])].map((char) => {
                   if (char.id === character.id && !!char.token?.isMyChar)
                     return character;

@@ -5,6 +5,7 @@ type ContentProps = {
   width?: number;
   $marginBottom?: string;
   $active?: boolean;
+  color?: string;
 };
 
 export const Content = styled.div<ContentProps>`
@@ -32,7 +33,7 @@ export const SubContent = styled.div<ContentProps>`
   display: flex;
   align-items: center;
   justify-content: center;
-  color: #30231e;
+  color: ${(props) => (props.color ? props.color : "#30231e")};
   font-size: 20px;
   background: ${(props) => (props.disabled ? "#ccc" : "#e5bfa1")};
 

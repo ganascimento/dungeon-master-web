@@ -7,6 +7,8 @@ type Props = {
   minLength?: number;
   maxLength?: number;
   type?: string;
+  error?: boolean;
+  onBlur?: () => void;
 };
 
 export const TextField = (props: Props) => {
@@ -29,6 +31,8 @@ export const TextField = (props: Props) => {
         placeholder={props.placeholder}
         value={props.value ?? ""}
         onChange={(e) => onChange(e.target.value)}
+        $error={props.error ?? false}
+        onBlur={props.onBlur}
       />
       {props.maxLength ? (
         <S.Counter status={validCounter()}>

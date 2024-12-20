@@ -29,6 +29,7 @@ export default function AttributesView(props: Props) {
     setAbilities(
       abilities.map((ability) => {
         ability.points = (props.character as any)[ability.field as any];
+        ability.bonus = CalcAttributeBonus(ability.points ?? 0);
         return ability;
       })
     );

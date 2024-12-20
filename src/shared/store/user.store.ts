@@ -2,6 +2,7 @@ import {
   AuthTokenType,
   CreateUserType,
   LoginType,
+  UpdateUserType,
 } from "../../@types/app.types";
 import { Api } from "./base";
 
@@ -15,7 +16,16 @@ export class UserStore {
     }
   }
 
-  async createUser(data: CreateUserType): Promise<void> {
+  async create(data: CreateUserType): Promise<void> {
     await Api.post(`/user`, data);
+  }
+
+  async update(data: UpdateUserType): Promise<void> {
+    await Api.put("/user", data);
+  }
+
+  async checkUserExists(userName: string): Promise<boolean> {
+    const result = await Api.get(`/user/exists/userName/${userName}`);
+    return result.data;
   }
 }

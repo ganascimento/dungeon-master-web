@@ -1,20 +1,36 @@
 import { CharacterActionRequestType } from "../../@types/app.types";
-import { SignalRWebSocket } from "../websocket/signalr.websocket";
+import { GameWebSocket } from "../websocket/game.websocket";
 
 export class GameStore {
-  async startBattle(adventureId: string): Promise<void> {
-    await SignalRWebSocket.invoke("StartBattle", adventureId);
+  async connect(): Promise<void> {
+    await GameWebSocket.start();
+  }
+
+  async disconnect(): Promise<void> {
+    await GameWebSocket.stop();
+  }
+
+  async attachAdventure(adventureId: string): Promise<void> {
+    await GameWebSocket.invoke("AttachAdventure", adventureId);
+  }
+
+  async startBattle(): Promise<void> {
+    await GameWebSocket.invoke("StartBattle");
   }
 
   async characterAction(message: CharacterActionRequestType): Promise<void> {
-    await SignalRWebSocket.invoke("CharacterAction", message);
+    await GameWebSocket.invoke("CharacterAction", message);
   }
 
-  async characterEndTurn(adventureId: string): Promise<void> {
-    await SignalRWebSocket.invoke("CharacterEndTurn", adventureId);
+  async characterEndTurn(): Promise<void> {
+    await GameWebSocket.invoke("CharacterEndTurn");
   }
 
   async attachActionResult(func: any) {
-    await SignalRWebSocket.attachEvent("ActionResult", func);
+    await GameWebSocket.attachEvent("ActionResult", func);
+  }
+
+  async attachStartBattleLoading(func: any) {
+    await GameWebSocket.attachEvent("StartBattleLoading", func);
   }
 }

@@ -20,4 +20,14 @@ export const setAuthentication = (token: string) => {
   localStorage.setItem(JWT_KEY, token);
 };
 
+export const getUserId = (): string => {
+  const token = localStorage.getItem(JWT_KEY);
+  if (!token || token.trim() === "") throw new Error("Invalid token");
+
+  const tokenSplit = token.split(".");
+  const tokenData = JSON.parse(atob(tokenSplit[1]));
+
+  return tokenData.userId;
+};
+
 export const getToken = (): string | null => localStorage.getItem(JWT_KEY);

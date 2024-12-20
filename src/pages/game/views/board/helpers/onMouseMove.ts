@@ -2,7 +2,6 @@ import {
   AdventureType,
   BoardConfigType,
 } from "../../../../../@types/app.types";
-import { CharacterTypeEnum } from "../../../../../@types/constants.types";
 import { GetSelectedChar } from "../../../../../shared/ultils/characterGets";
 import { GetElementInPosition } from "./getElementInPosition";
 import { GetMatrixFromPosition } from "./getSizes";
@@ -20,11 +19,7 @@ export const OnMouseMove = (
     const character = GetSelectedChar(adventure);
     const skill = character?.skills?.find((x) => x.selected);
 
-    if (
-      !elementInPosition ||
-      elementInPosition?.type !== CharacterTypeEnum.Enemy ||
-      !!skill
-    ) {
+    if (!elementInPosition || !!skill) {
       setPlayerInfo({ show: false });
       return;
     }

@@ -12,8 +12,10 @@ export const DificutyContent = styled.div`
 
 export const PersonAddContent = styled.div`
   display: flex;
-  flex-wrap: wrap;
   gap: 12px;
+  width: 100%;
+  align-items: center;
+  justify-content: center;
 `;
 
 export const PersonAdd = styled.div`
@@ -44,4 +46,13 @@ export const PersonAdd = styled.div`
   div {
     font-size: 13px;
   }
+`;
+
+export const SubTitle = styled.div`
+  font-size: 23px;
+  margin-bottom: 15px;
+`;
+
+export const Space = styled.div`
+  height: 35px;
 `;
