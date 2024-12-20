@@ -86,7 +86,13 @@ export default function AttributesView(props: Props) {
   };
 
   const handleReset = () => {
-    setAbilities(AbilitiesList);
+    setAbilities([
+      ...abilities.map((ability) => {
+        ability.points = 8;
+        ability.bonus = CalcAttributeBonus(ability.points ?? 0);
+        return ability;
+      }),
+    ]);
     setTotalPoints(20);
   };
 
