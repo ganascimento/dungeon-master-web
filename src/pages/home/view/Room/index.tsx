@@ -155,7 +155,7 @@ export default function OnlineRoomsView(props: Props) {
       >
         <>
           {characters.length === 0 ? (
-            <>Você deve ter pelo menos 1 personagem de campanha cadastrado</>
+            <>Você deve ter pelo menos 1 personagem de campanha criado</>
           ) : (
             <>
               {dataRooms.length === 0 ? (
